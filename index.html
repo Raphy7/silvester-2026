@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Silvester 2026 · Tallinn & Helsinki</title>
+<style>
+:root{--bg:#0d1b2a;--card:#1b2a3d;--acc:#ffc857;--txt:#e8eef5;--mut:#8aa0b8;--ee:#4891d9;--fi:#9ec9ff}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,Segoe UI,sans-serif;background:var(--bg);color:var(--txt)}
+header{padding:24px 16px 12px;text-align:center;background:linear-gradient(160deg,#1f3b5c,#0d1b2a)}
+h1{margin:0;font-size:1.7rem}
+#countdown{color:var(--acc);font-weight:600;margin-top:6px}
+nav{display:flex;gap:6px;overflow-x:auto;padding:12px 16px;position:sticky;top:0;background:var(--bg);z-index:2}
+nav button{flex:0 0 auto;border:0;border-radius:20px;padding:8px 14px;background:var(--card);color:var(--txt);cursor:pointer;font-size:.9rem}
+nav button.active{background:var(--acc);color:#111;font-weight:600}
+main{display:grid;grid-template-columns:minmax(300px,1fr) 1.3fr;gap:16px;padding:0 16px 24px;max-width:1300px;margin:auto}
+@media(max-width:800px){main{grid-template-columns:1fr}#mapwrap{position:static!important;height:320px!important}}
+#dayhead{display:flex;justify-content:space-between;align-items:center;margin:8px 0}
+#dayhead h2{margin:0;font-size:1.2rem}
+.route{color:var(--acc);text-decoration:none;font-size:.85rem}
+ul{list-style:none;padding:0;margin:0}
+li{display:flex;gap:10px;align-items:center;padding:10px 12px;margin-bottom:6px;background:var(--card);border-radius:10px;border-left:4px solid transparent;cursor:pointer;transition:.15s}
+li:hover{transform:translateX(3px)}
+li.sel{border-left-color:var(--acc)}
+li.done .t{text-decoration:line-through;opacity:.5}
+li.noloc{cursor:default}
+.time{font-variant-numeric:tabular-nums;color:var(--mut);min-width:92px;font-size:.85rem}
+.t{flex:1}
+.pin{font-size:.8rem;opacity:.7}
+input[type=checkbox]{accent-color:var(--acc);width:18px;height:18px}
+#mapwrap{position:sticky;top:64px;height:calc(100vh - 90px);border-radius:12px;overflow:hidden;background:var(--card)}
+iframe{width:100%;height:100%;border:0}
+.ee{color:var(--ee)}.fi{color:var(--fi)}
+footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
+#tools{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+#tools button{border:1px solid #ffffff33;background:transparent;color:var(--txt);border-radius:8px;padding:6px 10px;cursor:pointer}
+#tools button:hover{border-color:var(--acc)}
+.t small{display:block;color:var(--mut);font-size:.78rem;margin-top:2px}
+.t small a{color:var(--acc)}
+li.edit{display:grid;grid-template-columns:90px 1fr auto;gap:6px;cursor:default;border-left-color:var(--acc)}
+li.edit:hover,li.add:hover{transform:none}
+li.edit input{background:var(--bg);border:1px solid #ffffff22;color:var(--txt);border-radius:6px;padding:6px;font:inherit;font-size:.85rem;width:100%}
+li.edit .e-q,li.edit .e-note{grid-column:1/3}
+.e-btns{grid-column:3;grid-row:1/4;display:flex;flex-direction:column;gap:4px}
+.e-btns button{border:0;border-radius:6px;background:var(--bg);color:var(--txt);cursor:pointer;padding:4px 8px}
+li.add{justify-content:center;color:var(--acc);border:1px dashed var(--acc);background:transparent}
+body.editing #daytitle{outline:1px dashed var(--acc);padding:2px 6px;border-radius:6px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎆 Silvester 2026 · 🇪🇪 Tallinn & 🇫🇮 Helsinki</h1>
+  <div id="countdown"></div>
+  <div id="tools">
+    <button id="bEdit">✏️ Bearbeiten</button>
+    <button id="bExp">💾 Export</button>
+    <button id="bImp">📂 Import</button>
+    <button id="bReset">↺ Zurücksetzen</button>
+    <input type="file" id="file" accept=".json,application/json" hidden>
+  </div>
+</header>
+<nav id="tabs"></nav>
+<main>
+  <section>
+    <div id="dayhead"><h2 id="daytitle"></h2><a id="route" class="route" target="_blank">🗺️ Tagesroute in Google Maps</a></div>
+    <ul id="list"></ul>
+  </section>
+  <div id="mapwrap"><iframe id="map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+</main>
+<footer>Änderungen & Häkchen werden lokal im Browser gespeichert · Export/Import zum Sichern oder Übertragen aufs Handy</footer>
+
+<script>
+const T = ", Tallinn", H = ", Helsinki";
+// [Zeit, Titel, Google-Maps-Suchbegriff, Notiz, erledigt] – nur Zeit & Titel sind Pflicht
+const DEFAULT_DAYS = [
+ {id:"d1", tab:"Mi 30.12.", title:"🇪🇪 Mi., 30.12. – Ankunft Tallinn", city:"Tallinn Old Town", items:[
+  ["12:40","✈️ Ankunft Tallinn","Tallinn Airport"],
+  ["13:15–14:15","Airbnb / Gepäck"],
+  ["14:30","Vabaduse väljak","Vabaduse väljak"+T],
+  ["15:00","Kiek in de Kök → Toompea","Kiek in de Kök"+T],
+  ["16:00","Kohtuotsa Aussichtspunkt → Patkuli Aussichtspunkt","Kohtuotsa viewing platform"+T],
+  ["16:45","Alexander-Newski-Kathedrale","Alexander Nevsky Cathedral"+T],
+  ["17:15","Raekoja plats & Weihnachtsmarkt","Raekoja plats"+T],
+  ["18:30","🍽️ Rataskaevu 16","Rataskaevu 16"+T],
+  ["21:00","🍸 Whisper Sister","Whisper Sister"+T],
+  ["23:00","Airbnb"]]},
+ {id:"d2", tab:"Do 31.12. 🎆", title:"🇪🇪 Do., 31.12. – Silvester", city:"Tallinn Old Town", items:[
+  ["09:30","☕ Frühstück"],
+  ["10:30","Viru Gate → St. Catherine’s Passage","Viru Gate"+T],
+  ["11:30","Pikk Street → Fat Margaret","Fat Margaret"+T],
+  ["12:30","Mittagessen"],
+  ["14:00","Telliskivi Creative City","Telliskivi Creative City"+T],
+  ["15:00","Kalamaja","Kalamaja"+T],
+  ["16:30","Airbnb"],
+  ["17:00–19:00","Pause / fertig machen"],
+  ["19:30","🍽️ Silvester-Dinner"],
+  ["22:30","Vabaduse väljak","Vabaduse väljak"+T],
+  ["00:00","🎆 Silvester!","Vabaduse väljak"+T],
+  ["00:30–03:00","🪩 Bars / Club"]]},
+ {id:"d3", tab:"Fr 01.01.", title:"🇪🇪 Fr., 01.01. – Neujahr", city:"Kalamaja"+T, items:[
+  ["11:00","☕ Frühstück"],
+  ["12:30","Kalamaja","Kalamaja"+T],
+  ["14:00","Telliskivi Creative City","Telliskivi Creative City"+T],
+  ["15:00","Balti Jaam Market","Balti Jaama Turg"+T],
+  ["15:30","Noblessner","Noblessner"+T],
+  ["17:00","☕ Café"],
+  ["18:30","🍽️ Abendessen"],
+  ["20:30","🍸 Drinks"],
+  ["23:00","Airbnb"]]},
+ {id:"d4", tab:"Sa 02.01. ⛴️", title:"🇪🇪→🇫🇮 Sa., 02.01. – Fähre & Helsinki", city:"Helsinki", items:[
+  ["05:30","⏰ Aufstehen"],
+  ["06:00","Airbnb → Fährterminal","Tallinn D-Terminal"],
+  ["06:30","Check-in / Boarding","Tallinn D-Terminal"],
+  ["07:00","⛴️ Fähre nach Helsinki"],
+  ["09:30","Ankunft Helsinki","West Terminal 2"+H],
+  ["10:00","Airbnb / Gepäck"],
+  ["10:30","☕ Frühstück / Kaffee"],
+  ["11:30","Market Square","Kauppatori"+H],
+  ["12:00","Esplanadi","Esplanadi Park"+H],
+  ["12:30","Senate Square","Senate Square"+H],
+  ["13:00","Helsinki Cathedral","Helsinki Cathedral"],
+  ["13:30","Mittagessen"],
+  ["15:00","Oodi","Oodi Helsinki Central Library"],
+  ["16:00","Design District / Punavuori","Punavuori"+H],
+  ["17:00–19:00","✨ Lux Helsinki","Lux Helsinki"],
+  ["19:30","🍽️ Abendessen"],
+  ["21:30","🍸 Liberty or Death","Liberty or Death"+H],
+  ["23:00","🍸 The Riff","The Riff"+H]]},
+ {id:"d5", tab:"So 03.01. 🔥", title:"🇫🇮 So., 03.01. – Suomenlinna & Sauna", city:"Helsinki", items:[
+  ["09:00","☕ Frühstück"],
+  ["10:00","⛴️ Fähre → Suomenlinna","Kauppatori"+H],
+  ["10:30–13:00","Suomenlinna","Suomenlinna"],
+  ["13:30","Rückfahrt"],
+  ["14:00","Mittagessen"],
+  ["15:00","Innenstadt","Helsinki City Centre"],
+  ["16:30","Richtung Airbnb"],
+  ["17:00–19:00","🔥 Löyly Helsinki","Löyly"+H],
+  ["19:30","🍽️ Abendessen"],
+  ["21:30","🍸 Drinks"],
+  ["23:30","Airbnb"]]},
+ {id:"d6", tab:"Mo 04.01. ✈️", title:"🇫🇮 Mo., 04.01. – Heimreise", city:"Helsinki", items:[
+  ["08:30","⏰ Aufstehen"],
+  ["09:00","☕ Frühstück"],
+  ["10:00","Hafen / Market Square","Kauppatori"+H],
+  ["10:45","Esplanadi / Souvenirs","Esplanadi Park"+H],
+  ["11:30","Airbnb → Gepäck"],
+  ["12:00","Abfahrt Flughafen"],
+  ["ca. 12:30","Helsinki Airport","Helsinki Airport"],
+  ["15:20","✈️ Rückflug","Helsinki Airport"]]}
+];
+
+const $ = id => document.getElementById(id);
+let DAYS = JSON.parse(localStorage.getItem("plan") || "null") || structuredClone(DEFAULT_DAYS);
+let cur = 0, edit = false;
+const save = () => localStorage.setItem("plan", JSON.stringify(DAYS));
+const embed = q => `https://maps.google.com/maps?q=${encodeURIComponent(q)}&z=15&output=embed`;
+const esc = s => String(s || "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+const linkify = s => s.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" onclick="event.stopPropagation()">🔗 Link</a>');
+
+function renderTabs() {
+  $("tabs").innerHTML = "";
+  DAYS.forEach((d, i) => {
+    const b = document.createElement("button");
+    b.textContent = d.tab;
+    b.className = i === cur ? "active" : "";
+    b.onclick = () => showDay(i);
+    $("tabs").appendChild(b);
+  });
+}
+
+function editRow(d, it, k) {
+  const li = document.createElement("li");
+  li.className = "edit";
+  li.innerHTML = `<input value="${esc(it[0])}" placeholder="Zeit"><input value="${esc(it[1])}" placeholder="Titel">
+    <input class="e-q" value="${esc(it[2])}" placeholder="📍 Ort (Google-Maps-Suche, optional)">
+    <input class="e-note" value="${esc(it[3])}" placeholder="📝 Notiz / Link (optional)">
+    <div class="e-btns"><button data-a="up" title="Nach oben">↑</button><button data-a="down" title="Nach unten">↓</button><button data-a="del" title="Löschen">🗑️</button></div>`;
+  li.querySelectorAll("input").forEach((inp, f) => inp.oninput = () => { it[f] = inp.value; save(); });
+  li.querySelector(".e-q").onchange = e => e.target.value && ($("map").src = embed(e.target.value));
+  li.querySelectorAll("button").forEach(b => b.onclick = () => {
+    const a = b.dataset.a;
+    if (a === "del") {
+      if (!confirm(`„${it[1]}“ löschen?`)) return;
+      d.items.splice(k, 1);
+    } else {
+      const j = k + (a === "up" ? -1 : 1);
+      if (j < 0 || j >= d.items.length) return;
+      [d.items[k], d.items[j]] = [d.items[j], d.items[k]];
+    }
+    save(); showDay(cur);
+  });
+  return li;
+}
+
+function viewRow(it) {
+  const [time, title, q, note, dn] = it, li = document.createElement("li");
+  li.className = (q ? "" : "noloc ") + (dn ? "done" : "");
+  li.innerHTML = `<input type="checkbox" ${dn ? "checked" : ""}><span class="time">${esc(time)}</span>
+    <span class="t">${esc(title)}${note ? `<small>${linkify(esc(note))}</small>` : ""}</span>${q ? '<span class="pin">📍</span>' : ""}`;
+  const cb = li.firstChild;
+  cb.onclick = e => { e.stopPropagation(); it[4] = cb.checked; li.classList.toggle("done", cb.checked); save(); };
+  if (q) li.onclick = () => {
+    document.querySelectorAll("li.sel").forEach(x => x.classList.remove("sel"));
+    li.classList.add("sel");
+    $("map").src = embed(q);
+  };
+  return li;
+}
+
+function showDay(i) {
+  cur = i;
+  const d = DAYS[i];
+  history.replaceState(null, "", "#" + d.id);
+  renderTabs();
+  document.body.classList.toggle("editing", edit);
+  const h = $("daytitle");
+  h.textContent = d.title;
+  h.contentEditable = edit;
+  h.oninput = () => { d.title = h.textContent; save(); };
+  const stops = [...new Set(d.items.filter(x => x[2]).map(x => x[2]))];
+  $("route").href = "https://www.google.com/maps/dir/" + stops.map(encodeURIComponent).join("/") + "/data=!4m2!4m1!3e2";
+  $("map").src = embed(d.city);
+  const ul = $("list");
+  ul.innerHTML = "";
+  d.items.forEach((it, k) => ul.appendChild(edit ? editRow(d, it, k) : viewRow(it)));
+  if (edit) {
+    const add = document.createElement("li");
+    add.className = "add";
+    add.textContent = "＋ Eintrag hinzufügen";
+    add.onclick = () => { d.items.push(["", "Neuer Eintrag", "", ""]); save(); showDay(cur); };
+    ul.appendChild(add);
+  }
+}
+
+$("bEdit").onclick = () => {
+  edit = !edit;
+  $("bEdit").textContent = edit ? "✅ Fertig" : "✏️ Bearbeiten";
+  showDay(cur);
+};
+$("bExp").onclick = () => {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(DAYS, null, 1)], {type: "application/json"}));
+  a.download = "reiseplan.json";
+  a.click();
+};
+$("bImp").onclick = () => $("file").click();
+$("file").onchange = async e => {
+  try {
+    const data = JSON.parse(await e.target.files[0].text());
+    if (!Array.isArray(data) || !data.every(d => d.title && Array.isArray(d.items))) throw 0;
+    DAYS = data; save(); showDay(0);
+  } catch { alert("Ungültige Datei – bitte eine exportierte reiseplan.json wählen."); }
+  e.target.value = "";
+};
+$("bReset").onclick = () => {
+  if (!confirm("Alle Änderungen und Häkchen verwerfen und den Originalplan laden?")) return;
+  localStorage.removeItem("plan");
+  DAYS = structuredClone(DEFAULT_DAYS);
+  showDay(Math.min(cur, DAYS.length - 1));
+};
+
+showDay(Math.max(0, DAYS.findIndex(d => "#" + d.id === location.hash)));
+
+const start = new Date("2026-12-30T12:40:00+02:00");
+function tick() {
+  const ms = start - new Date();
+  if (ms <= 0) { $("countdown").textContent = "🎉 Wir sind unterwegs!"; return; }
+  const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60;
+  $("countdown").textContent = `Noch ${d} Tage, ${h} Std., ${m} Min. bis zur Landung in Tallinn`;
+}
+tick(); setInterval(tick, 60000);
+</script>
+</body>
+</html>
