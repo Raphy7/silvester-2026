@@ -2,90 +2,207 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Silvester 2026 · Tallinn & Helsinki</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1624">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Silvester">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<title>Silvester 26/27 · Tallinn & Helsinki</title>
 <style>
-:root{--bg:#0d1b2a;--card:#1b2a3d;--acc:#ffc857;--txt:#e8eef5;--mut:#8aa0b8;--ee:#4891d9;--fi:#9ec9ff}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,Segoe UI,sans-serif;background:var(--bg);color:var(--txt)}
-header{padding:24px 16px 12px;text-align:center;background:linear-gradient(160deg,#1f3b5c,#0d1b2a)}
-h1{margin:0;font-size:1.7rem}
-#countdown{color:var(--acc);font-weight:600;margin-top:6px}
-nav{display:flex;gap:6px;overflow-x:auto;padding:12px 16px;position:sticky;top:0;background:var(--bg);z-index:2}
-nav button{flex:0 0 auto;border:0;border-radius:20px;padding:8px 14px;background:var(--card);color:var(--txt);cursor:pointer;font-size:.9rem}
-nav button.active{background:var(--acc);color:#111;font-weight:600}
-main{display:grid;grid-template-columns:minmax(300px,1fr) 1.3fr;gap:16px;padding:0 16px 24px;max-width:1300px;margin:auto}
-@media(max-width:800px){main{grid-template-columns:1fr}#mapwrap{position:static!important;height:320px!important}}
-#dayhead{display:flex;justify-content:space-between;align-items:center;margin:8px 0}
-#dayhead h2{margin:0;font-size:1.2rem}
-.route{color:var(--acc);text-decoration:none;font-size:.85rem}
-ul{list-style:none;padding:0;margin:0}
-li{display:flex;gap:10px;align-items:center;padding:10px 12px;margin-bottom:6px;background:var(--card);border-radius:10px;border-left:4px solid transparent;cursor:pointer;transition:.15s}
-li:hover{transform:translateX(3px)}
-li.sel{border-left-color:var(--acc)}
-li.done .t{text-decoration:line-through;opacity:.5}
-li.noloc{cursor:default}
-.time{font-variant-numeric:tabular-nums;color:var(--mut);min-width:92px;font-size:.85rem}
-.t{flex:1}
-.pin{font-size:.8rem;opacity:.7}
-input[type=checkbox]{accent-color:var(--acc);width:18px;height:18px}
-#mapwrap{position:sticky;top:64px;height:calc(100vh - 90px);border-radius:12px;overflow:hidden;background:var(--card)}
-iframe{width:100%;height:100%;border:0}
-.ee{color:var(--ee)}.fi{color:var(--fi)}
-footer{text-align:center;color:var(--mut);font-size:.8rem;padding:16px}
-#tools{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
-#tools button{border:1px solid #ffffff33;background:transparent;color:var(--txt);border-radius:8px;padding:6px 10px;cursor:pointer}
-#tools button:hover{border-color:var(--acc)}
-.t small{display:block;color:var(--mut);font-size:.78rem;margin-top:2px}
-.t small a{color:var(--acc)}
-li.edit{display:grid;grid-template-columns:90px 1fr auto;gap:6px;cursor:default;border-left-color:var(--acc)}
-li.edit:hover,li.add:hover{transform:none}
-li.edit input{background:var(--bg);border:1px solid #ffffff22;color:var(--txt);border-radius:6px;padding:6px;font:inherit;font-size:.85rem;width:100%}
-li.edit .e-q,li.edit .e-note{grid-column:1/3}
-.e-btns{grid-column:3;grid-row:1/4;display:flex;flex-direction:column;gap:4px}
-.e-btns button{border:0;border-radius:6px;background:var(--bg);color:var(--txt);cursor:pointer;padding:4px 8px}
-li.add{justify-content:center;color:var(--acc);border:1px dashed var(--acc);background:transparent}
-body.editing #daytitle{outline:1px dashed var(--acc);padding:2px 6px;border-radius:6px}
+:root{--bg:#0b1624;--card:#15263a;--card2:#1d334d;--acc:#ffc857;--acc2:#ff6b9a;--txt:#eaf1f8;--mut:#8ea3ba;--ok:#5dd39e;--r:16px;--sb:env(safe-area-inset-bottom)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{padding-bottom:calc(90px + var(--sb));overscroll-behavior-y:none}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--acc)}
+.mut{color:var(--mut);font-size:.8rem}
+
+header{padding:calc(14px + env(safe-area-inset-top)) 16px 14px;background:radial-gradient(120% 140% at 0% 0%,#2a4f7a 0%,transparent 60%),radial-gradient(100% 120% at 100% 0%,#5a2a55 0%,transparent 55%),var(--bg)}
+.brand{display:flex;align-items:center;gap:10px;max-width:1300px;margin:auto}
+.brand h1{flex:1;margin:0;font-size:1.2rem;line-height:1.2}
+.brand h1 small{display:block;font-size:.75rem;color:var(--mut);font-weight:400}
+.icon-btn{border:0;background:#ffffff14;border-radius:50%;width:44px;height:44px;font-size:1.2rem;flex:0 0 auto}
+#countdown{max-width:520px;margin:12px auto 0;cursor:pointer}
+.cd{display:flex;gap:8px}
+.cd div{flex:1;background:#ffffff10;border-radius:12px;padding:8px 2px;text-align:center}
+.cd b{display:block;font-size:1.45rem;color:var(--acc);font-variant-numeric:tabular-nums}
+.cd span{font-size:.65rem;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+.cdlabel{font-size:.8rem;color:var(--mut);margin-top:6px;text-align:center}
+.cdtext{text-align:center;font-size:1.05rem;font-weight:600;color:var(--acc);padding:6px}
+#countdown.final .cd b{animation:beat 1s infinite;color:var(--acc2)}
+@keyframes beat{50%{transform:scale(1.25)}}
+
+#tabs{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);scrollbar-width:none}
+#tabs::-webkit-scrollbar{display:none}
+#tabs button{flex:0 0 auto;border:0;border-radius:12px;padding:6px 12px;background:var(--card);line-height:1.15;min-width:68px;min-height:48px;font-weight:600;position:relative}
+#tabs button small{display:block;font-size:.68rem;color:var(--mut);font-weight:400}
+#tabs button.active{background:var(--acc);color:#111}
+#tabs button.active small{color:#443}
+#tabs button.today::after{content:"";position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--acc2)}
+
+#nowbar{margin:0 16px 12px;padding:12px 14px;border-radius:var(--r);background:linear-gradient(135deg,#ff6b9a30,#ffc85720);border:1px solid #ff6b9a55;font-size:.9rem;cursor:pointer;max-width:1268px}
+#nowbar b{color:var(--acc2)}
+@media(min-width:1300px){#nowbar{margin:0 auto 12px}}
+
+.planwrap{display:grid;grid-template-columns:minmax(320px,1fr) 1.2fr;gap:16px;padding:0 16px 16px;max-width:1300px;margin:auto}
+#mapwrap{position:sticky;top:78px;height:calc(100vh - 190px);border-radius:var(--r);overflow:hidden;background:var(--card)}
+#mapwrap iframe{width:100%;height:100%;border:0}
+@media(max-width:800px){.planwrap{grid-template-columns:1fr}#mapwrap{display:none}}
+.slide-l{animation:slideL .25s ease-out}.slide-r{animation:slideR .25s ease-out}
+@keyframes slideL{from{opacity:0;transform:translateX(40px)}}
+@keyframes slideR{from{opacity:0;transform:translateX(-40px)}}
+
+.daycard{background:linear-gradient(135deg,var(--card2),var(--card));border-radius:var(--r);padding:14px;margin-bottom:14px}
+.daycard h2{margin:0 0 6px;font-size:1.15rem}
+body.editing .daycard h2{outline:1px dashed var(--acc);border-radius:6px;padding:2px 6px}
+.meta{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.82rem;color:var(--mut)}
+.progress{height:6px;background:#ffffff14;border-radius:3px;margin:12px 0 4px;overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .4s}
+.actions{display:flex;gap:8px;margin-top:12px}
+.pill{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:12px;padding:10px;background:#ffffff14;color:var(--txt);text-decoration:none;font-size:.9rem;min-height:44px}
+.pill.primary{background:var(--acc);color:#111;font-weight:600}
+.pill:active{transform:scale(.97)}
+
+#list{list-style:none;margin:0;padding:0 0 0 16px;position:relative}
+#list::before{content:"";position:absolute;left:6px;top:10px;bottom:10px;width:2px;background:linear-gradient(var(--acc),var(--acc2));opacity:.35}
+.item{position:relative;background:var(--card);border-radius:14px;margin:0 0 8px 8px;transition:transform .15s,box-shadow .2s}
+.item::before{content:"";position:absolute;left:-23px;top:20px;width:10px;height:10px;border-radius:50%;background:var(--bg);border:2px solid var(--acc)}
+.item.done::before{background:var(--ok);border-color:var(--ok)}
+.item.now{box-shadow:0 0 0 2px var(--acc2),0 8px 24px -8px var(--acc2)}
+.item.now::before{background:var(--acc2);border-color:var(--acc2);animation:pulse 1.6s infinite}
+.item.next{box-shadow:0 0 0 1px #ffc85766}
+@keyframes pulse{from{box-shadow:0 0 0 0 #ff6b9a99}to{box-shadow:0 0 0 12px #ff6b9a00}}
+.row{display:flex;align-items:center;gap:12px;padding:10px 12px;min-height:56px}
+.item.loc .row{cursor:pointer}
+.item.loc .row:active{background:#ffffff08;border-radius:14px}
+.check{appearance:none;-webkit-appearance:none;flex:0 0 28px;height:28px;border-radius:50%;border:2px solid #ffffff40;display:grid;place-items:center;margin:0;cursor:pointer;transition:.15s}
+.check:checked{background:var(--ok);border-color:var(--ok)}
+.check:checked::after{content:"✓";color:var(--bg);font-weight:800;font-size:.95rem}
+.body{flex:1;min-width:0}
+.time{display:block;font-variant-numeric:tabular-nums;color:var(--acc);font-size:.78rem;font-weight:600}
+.badge{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:8px;background:var(--acc2);color:#fff;font-size:.65rem;letter-spacing:.04em}
+.badge.nx{background:#ffc85733;color:var(--acc)}
+.title{display:block;font-weight:500}
+.item.done .title{text-decoration:line-through;opacity:.5}
+.note{display:block;color:var(--mut);font-size:.8rem;margin-top:2px;overflow-wrap:anywhere}
+.chev{color:var(--mut);font-size:1.3rem;transition:transform .2s}
+.item.open .chev{transform:rotate(90deg)}
+.detail{display:none;padding:0 12px 12px}
+.item.open .detail{display:block;animation:fade .25s}
+.detail iframe{width:100%;height:220px;border:0;border-radius:12px;background:var(--card2);display:block}
+.detail .actions{margin-top:8px}
+@keyframes fade{from{opacity:0;transform:translateY(-6px)}}
+
+.item.edit{display:grid;grid-template-columns:90px 1fr;gap:6px;padding:10px}
+.item.edit .full{grid-column:1/-1}
+.field{width:100%;background:var(--bg);border:1px solid #ffffff22;color:var(--txt);border-radius:10px;padding:9px 11px;font:inherit;font-size:16px;min-height:44px}
+.field:focus{outline:none;border-color:var(--acc)}
+textarea.field{resize:vertical;min-height:70px;margin-top:6px}
+.e-btns{grid-column:1/-1;display:flex;gap:6px;justify-content:flex-end}
+.e-btns button{border:0;border-radius:10px;background:var(--bg);min-width:44px;min-height:40px}
+.item.add{display:flex;justify-content:center;align-items:center;min-height:52px;color:var(--acc);border:1px dashed var(--acc);background:transparent;cursor:pointer}
+
+.view{display:none}.view.active{display:block;animation:fade .25s}
+.page{padding:12px 16px;max-width:680px;margin:auto}
+.card{background:var(--card);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card h3{margin:0 0 12px;font-size:1rem}
+.hero{text-align:center;background:linear-gradient(135deg,#2a4f7a,#5a2a55)}
+.big{font-size:2.3rem;font-weight:700;margin:2px 0;font-variant-numeric:tabular-nums}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.form .full{grid-column:1/-1}
+.cats{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.cat{border:1px solid #ffffff1a;background:var(--bg);border-radius:12px;padding:6px 0;font-size:1.25rem;min-height:52px}
+.cat small{display:block;font-size:.58rem;color:var(--mut)}
+.cat.sel{border-color:var(--acc);background:#ffc85722}
+.plain{list-style:none;margin:0;padding:0}
+.plain li{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #ffffff10;min-height:52px}
+.plain li:last-child{border-bottom:0}
+.plain label{flex:1;display:flex;align-items:center;gap:12px;cursor:pointer}
+.plain li.done label span{text-decoration:line-through;opacity:.5}
+.x{border:0;background:none;color:var(--mut);width:40px;height:40px;border-radius:50%;flex:0 0 auto}
+.x:active{background:#ffffff14}
+.grow{flex:1;min-width:0}
+.amt{font-weight:600;font-variant-numeric:tabular-nums}
+.pos{color:var(--ok)}.neg{color:var(--acc2)}
+.cbar{display:flex;align-items:center;gap:8px;font-size:.8rem;margin-top:6px;text-align:left}
+.cbar i{height:8px;border-radius:4px;background:linear-gradient(90deg,var(--acc),var(--acc2));display:block}
+.addrow{display:flex;gap:8px;margin-bottom:6px}
+.addrow .pill{flex:0 0 56px}
+.phr{width:100%;border-collapse:collapse;font-size:.88rem}
+.phr td,.phr th{padding:8px 4px;border-bottom:1px solid #ffffff10;text-align:left;vertical-align:top}
+.phr th{color:var(--mut);font-weight:500;font-size:.75rem}
+.facts{margin:0;padding:0;list-style:none}
+.facts li{padding:7px 0;border-bottom:1px solid #ffffff10;font-size:.9rem}
+.facts li:last-child{border-bottom:0}
+.bk{margin-bottom:14px;position:relative}
+.bk .field:first-child{font-weight:600;padding-right:48px}
+.bk .x{position:absolute;right:2px;top:2px}
+
+#bottom{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + var(--sb));display:flex;gap:2px;padding:6px;background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid #ffffff18;border-radius:24px;z-index:20;box-shadow:0 12px 30px -8px #000c}
+#bottom button{border:0;background:none;border-radius:18px;padding:6px 0;display:flex;flex-direction:column;align-items:center;font-size:1.25rem;color:var(--mut);width:76px;transition:.2s}
+#bottom button span{font-size:.68rem;margin-top:1px}
+#bottom button.active{background:#ffffff16;color:var(--txt)}
+#bottom button.active span{color:var(--acc)}
+
+#fw{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50;display:none}
+#toast{position:fixed;left:50%;bottom:calc(96px + var(--sb));transform:translateX(-50%) translateY(20px);background:var(--txt);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:.9rem;opacity:0;transition:.25s;z-index:60;pointer-events:none;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%)}
 </style>
 </head>
 <body>
 <header>
-  <h1>🎆 Silvester 2026 · 🇪🇪 Tallinn & 🇫🇮 Helsinki</h1>
-  <div id="countdown"></div>
-  <div id="tools">
-    <button id="bEdit">✏️ Bearbeiten</button>
-    <button id="bExp">💾 Export</button>
-    <button id="bImp">📂 Import</button>
-    <button id="bReset">↺ Zurücksetzen</button>
-    <input type="file" id="file" accept=".json,application/json" hidden>
+  <div class="brand">
+    <h1>🎆 Silvester 26/27<small>🇪🇪 Tallinn · 🇫🇮 Helsinki</small></h1>
+    <button class="icon-btn" id="bFw" aria-label="Feuerwerk">🎇</button>
   </div>
+  <div id="countdown"></div>
 </header>
-<nav id="tabs"></nav>
-<main>
-  <section>
-    <div id="dayhead"><h2 id="daytitle"></h2><a id="route" class="route" target="_blank">🗺️ Tagesroute in Google Maps</a></div>
-    <ul id="list"></ul>
-  </section>
-  <div id="mapwrap"><iframe id="map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
-</main>
-<footer>Änderungen & Häkchen werden lokal im Browser gespeichert · Export/Import zum Sichern oder Übertragen aufs Handy</footer>
+
+<section id="v-plan" class="view active">
+  <nav id="tabs"></nav>
+  <div id="nowbar" hidden></div>
+  <div class="planwrap">
+    <div id="daycol">
+      <div class="daycard" id="daycard"></div>
+      <ul id="list"></ul>
+    </div>
+    <div id="mapwrap"><iframe id="map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Karte"></iframe></div>
+  </div>
+</section>
+<section id="v-money" class="view"></section>
+<section id="v-pack" class="view"></section>
+<section id="v-info" class="view"></section>
+
+<nav id="bottom">
+  <button data-v="plan" class="active">📅<span>Plan</span></button>
+  <button data-v="money">💶<span>Kasse</span></button>
+  <button data-v="pack">🎒<span>Packen</span></button>
+  <button data-v="info">ℹ️<span>Infos</span></button>
+</nav>
+<canvas id="fw"></canvas>
+<div id="toast"></div>
 
 <script>
 const T = ", Tallinn", H = ", Helsinki";
-// [Zeit, Titel, Google-Maps-Suchbegriff, Notiz, erledigt] – nur Zeit & Titel sind Pflicht
-const DEFAULT_DAYS = [
- {id:"d1", tab:"Mi 30.12.", title:"🇪🇪 Mi., 30.12. – Ankunft Tallinn", city:"Tallinn Old Town", items:[
+// Einträge: [Zeit, Titel, Google-Maps-Suchbegriff, Notiz, erledigt]
+const DEFAULTS = {
+ days: [
+ {id:"d1", date:"2026-12-30", c:"ee", icon:"✈️", title:"🇪🇪 Ankunft Tallinn", city:"Tallinn Old Town", items:[
   ["12:40","✈️ Ankunft Tallinn","Tallinn Airport"],
   ["13:15–14:15","Airbnb / Gepäck"],
   ["14:30","Vabaduse väljak","Vabaduse väljak"+T],
   ["15:00","Kiek in de Kök → Toompea","Kiek in de Kök"+T],
-  ["16:00","Kohtuotsa Aussichtspunkt → Patkuli Aussichtspunkt","Kohtuotsa viewing platform"+T],
+  ["16:00","Kohtuotsa Aussichtspunkt → Patkuli Aussichtspunkt","Kohtuotsa viewing platform"+T,"Sonnenuntergang ca. 15:27 – ideal für die Aussicht"],
   ["16:45","Alexander-Newski-Kathedrale","Alexander Nevsky Cathedral"+T],
   ["17:15","Raekoja plats & Weihnachtsmarkt","Raekoja plats"+T],
   ["18:30","🍽️ Rataskaevu 16","Rataskaevu 16"+T],
   ["21:00","🍸 Whisper Sister","Whisper Sister"+T],
   ["23:00","Airbnb"]]},
- {id:"d2", tab:"Do 31.12. 🎆", title:"🇪🇪 Do., 31.12. – Silvester", city:"Tallinn Old Town", items:[
+ {id:"d2", date:"2026-12-31", c:"ee", icon:"🎆", title:"🇪🇪 Silvester in Tallinn", city:"Tallinn Old Town", items:[
   ["09:30","☕ Frühstück"],
   ["10:30","Viru Gate → St. Catherine’s Passage","Viru Gate"+T],
   ["11:30","Pikk Street → Fat Margaret","Fat Margaret"+T],
@@ -96,9 +213,9 @@ const DEFAULT_DAYS = [
   ["17:00–19:00","Pause / fertig machen"],
   ["19:30","🍽️ Silvester-Dinner"],
   ["22:30","Vabaduse väljak","Vabaduse väljak"+T],
-  ["00:00","🎆 Silvester!","Vabaduse väljak"+T],
+  ["00:00","🎆 Silvester!","Vabaduse väljak"+T,"Head uut aastat! 🥂"],
   ["00:30–03:00","🪩 Bars / Club"]]},
- {id:"d3", tab:"Fr 01.01.", title:"🇪🇪 Fr., 01.01. – Neujahr", city:"Kalamaja"+T, items:[
+ {id:"d3", date:"2027-01-01", c:"ee", icon:"🌅", title:"🇪🇪 Neujahr in Tallinn", city:"Kalamaja"+T, items:[
   ["11:00","☕ Frühstück"],
   ["12:30","Kalamaja","Kalamaja"+T],
   ["14:00","Telliskivi Creative City","Telliskivi Creative City"+T],
@@ -108,7 +225,7 @@ const DEFAULT_DAYS = [
   ["18:30","🍽️ Abendessen"],
   ["20:30","🍸 Drinks"],
   ["23:00","Airbnb"]]},
- {id:"d4", tab:"Sa 02.01. ⛴️", title:"🇪🇪→🇫🇮 Sa., 02.01. – Fähre & Helsinki", city:"Helsinki", items:[
+ {id:"d4", date:"2027-01-02", c:"fi", icon:"⛴️", title:"🇪🇪→🇫🇮 Fähre & Helsinki", city:"Helsinki", items:[
   ["05:30","⏰ Aufstehen"],
   ["06:00","Airbnb → Fährterminal","Tallinn D-Terminal"],
   ["06:30","Check-in / Boarding","Tallinn D-Terminal"],
@@ -123,23 +240,23 @@ const DEFAULT_DAYS = [
   ["13:30","Mittagessen"],
   ["15:00","Oodi","Oodi Helsinki Central Library"],
   ["16:00","Design District / Punavuori","Punavuori"+H],
-  ["17:00–19:00","✨ Lux Helsinki","Lux Helsinki"],
+  ["17:00–19:00","✨ Lux Helsinki","Lux Helsinki","Termine & Routen vorab prüfen: https://luxhelsinki.fi"],
   ["19:30","🍽️ Abendessen"],
   ["21:30","🍸 Liberty or Death","Liberty or Death"+H],
   ["23:00","🍸 The Riff","The Riff"+H]]},
- {id:"d5", tab:"So 03.01. 🔥", title:"🇫🇮 So., 03.01. – Suomenlinna & Sauna", city:"Helsinki", items:[
+ {id:"d5", date:"2027-01-03", c:"fi", icon:"🔥", title:"🇫🇮 Suomenlinna & Sauna", city:"Helsinki", items:[
   ["09:00","☕ Frühstück"],
-  ["10:00","⛴️ Fähre → Suomenlinna","Kauppatori"+H],
+  ["10:00","⛴️ Fähre → Suomenlinna","Kauppatori"+H,"HSL-Fähre, gilt mit HSL-Ticket Zone AB"],
   ["10:30–13:00","Suomenlinna","Suomenlinna"],
   ["13:30","Rückfahrt"],
   ["14:00","Mittagessen"],
   ["15:00","Innenstadt","Helsinki City Centre"],
   ["16:30","Richtung Airbnb"],
-  ["17:00–19:00","🔥 Löyly Helsinki","Löyly"+H],
+  ["17:00–19:00","🔥 Löyly Helsinki","Löyly"+H,"Vorab reservieren! Badesachen mitnehmen · https://www.loylyhelsinki.fi"],
   ["19:30","🍽️ Abendessen"],
   ["21:30","🍸 Drinks"],
   ["23:30","Airbnb"]]},
- {id:"d6", tab:"Mo 04.01. ✈️", title:"🇫🇮 Mo., 04.01. – Heimreise", city:"Helsinki", items:[
+ {id:"d6", date:"2027-01-04", c:"fi", icon:"✈️", title:"🇫🇮 Heimreise", city:"Helsinki", items:[
   ["08:30","⏰ Aufstehen"],
   ["09:00","☕ Frühstück"],
   ["10:00","Hafen / Market Square","Kauppatori"+H],
@@ -148,128 +265,473 @@ const DEFAULT_DAYS = [
   ["12:00","Abfahrt Flughafen"],
   ["ca. 12:30","Helsinki Airport","Helsinki Airport"],
   ["15:20","✈️ Rückflug","Helsinki Airport"]]}
-];
+ ],
+ people: ["Ich", "Begleitung"],
+ expenses: [],
+ packing: ["Reisepass / Personalausweis","Handy + Ladekabel","Powerbank (Kälte leert Akkus!)","Winterjacke","Mütze, Schal, Handschuhe","Thermo-Unterwäsche","Warme Socken","Winterschuhe mit Profil","Badesachen für Löyly","Silvester-Outfit","Kreditkarte","Krankenversicherungskarte","Lippenpflege & Handcreme","Taschenwärmer","Kopfhörer"].map(n => [n, false]),
+ bookings: [
+  {k:"✈️ Hinflug · 30.12.", v:"Ankunft Tallinn 12:40\nFlugnummer / Buchungscode: "},
+  {k:"🏠 Airbnb Tallinn", v:"Adresse: \nCheck-in / Türcode: "},
+  {k:"⛴️ Fähre Tallinn → Helsinki · 02.01.", v:"Abfahrt 07:00\nReederei / Buchungsnummer: "},
+  {k:"🏠 Airbnb Helsinki", v:"Adresse: \nCheck-in / Türcode: "},
+  {k:"✈️ Rückflug · 04.01.", v:"Abflug Helsinki 15:20\nFlugnummer / Buchungscode: "}
+ ]
+};
+const SUN = {"2026-12-30":["09:18","15:27"],"2026-12-31":["09:18","15:28"],"2027-01-01":["09:18","15:30"],"2027-01-02":["09:24","15:20"],"2027-01-03":["09:23","15:22"],"2027-01-04":["09:22","15:24"]};
+const CITY = {ee:[59.437,24.745], fi:[60.170,24.938]};
+const CATS = [["🍽️","Essen"],["🍸","Drinks"],["🚕","Transport"],["🎟️","Eintritt"],["🛍️","Shopping"],["💫","Sonst."]];
+const LAND = new Date("2026-12-30T12:40:00+02:00"), NY = new Date("2027-01-01T00:00:00+02:00"), BACK = new Date("2027-01-04T15:20:00+02:00");
 
+/* ---------- Helpers ---------- */
 const $ = id => document.getElementById(id);
-let DAYS = JSON.parse(localStorage.getItem("plan") || "null") || structuredClone(DEFAULT_DAYS);
-let cur = 0, edit = false;
-const save = () => localStorage.setItem("plan", JSON.stringify(DAYS));
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+const linkify = s => s.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener" onclick="event.stopPropagation()">🔗 Link</a>').replace(/\n/g, "<br>");
 const embed = q => `https://maps.google.com/maps?q=${encodeURIComponent(q)}&z=15&output=embed`;
-const esc = s => String(s || "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
-const linkify = s => s.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" onclick="event.stopPropagation()">🔗 Link</a>');
+const navUrl = q => `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(q)}&travelmode=walking`;
+const mapsUrl = q => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+const eur = v => v.toLocaleString("de-DE", {style:"currency", currency:"EUR"});
+const mobile = matchMedia("(max-width:800px)");
+const buzz = () => navigator.vibrate?.(12);
+const toast = msg => { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2000); };
+const wd = d => new Date(d + "T12:00:00").toLocaleDateString("de-DE", {weekday:"short"});
+const dm = d => d.slice(8, 10) + "." + d.slice(5, 7) + ".";
+const shiftDate = (d, n) => new Date(Date.parse(d + "T12:00:00Z") + n * 864e5).toISOString().slice(0, 10);
+const fmtMin = m => m < 60 ? `${m} Min.` : `${Math.floor(m / 60)} h ${m % 60 ? m % 60 + " min" : ""}`;
+const toMin = s => { const m = /(\d{1,2}):(\d{2})/.exec(s || ""); if (!m) return null; const v = +m[1] * 60 + +m[2]; return v < 300 ? v + 1440 : v; };
+
+/* ---------- State ---------- */
+const KEY = "trip-v2";
+function normalize(s) {
+  if (Array.isArray(s)) s = {days: s};
+  const d = structuredClone(DEFAULTS);
+  s = {...d, ...s};
+  s.days = s.days.map(x => ({...(d.days.find(y => y.id === x.id) || {}), ...x}));
+  return s;
+}
+let S = normalize(JSON.parse(localStorage.getItem(KEY) || localStorage.getItem("plan") || "null") || {});
+const save = () => localStorage.setItem(KEY, JSON.stringify(S));
+let WX = JSON.parse(localStorage.getItem("wx") || "{}");
+let cur = 0, edit = false, openIdx = null, lastLoc = "", timeOffset = 0;
+
+const simParam = new URLSearchParams(location.search).get("now");
+if (simParam) timeOffset = new Date(simParam + "+02:00") - Date.now();
+const now = () => new Date(Date.now() + timeOffset);
+function tNow() {
+  const s = now().toLocaleString("sv-SE", {timeZone: "Europe/Tallinn"});
+  return {date: s.slice(0, 10), mins: +s.slice(11, 13) * 60 + +s.slice(14, 16)};
+}
+function locate() {
+  const {date, mins} = tNow();
+  let di = S.days.findIndex(d => d.date === date), t = mins;
+  const pi = S.days.findIndex(d => d.date === shiftDate(date, -1));
+  if (pi >= 0 && mins < 300 && S.days[pi].items.some(it => toMin(it[0]) >= 1440)) { di = pi; t += 1440; }
+  if (di < 0) return null;
+  let c = -1, n = -1;
+  S.days[di].items.forEach((it, k) => { const v = toMin(it[0]); if (v == null) return; if (v <= t) c = k; else if (n < 0) n = k; });
+  return {di, cur: c, next: n, inMin: n >= 0 ? toMin(S.days[di].items[n][0]) - t : null};
+}
+
+/* ---------- Plan ---------- */
+function wxText(d) {
+  const w = WX[d.date];
+  if (!w) return `🌡️ typ. −1° / −6°`;
+  const i = w.c === 0 ? "☀️" : w.c <= 3 ? "⛅" : w.c <= 48 ? "🌫️" : w.c <= 67 ? "🌧️" : w.c <= 77 ? "❄️" : w.c <= 82 ? "🌦️" : w.c <= 86 ? "🌨️" : "⛈️";
+  return `${i} ${w.max}° / ${w.min}°`;
+}
 
 function renderTabs() {
-  $("tabs").innerHTML = "";
-  DAYS.forEach((d, i) => {
-    const b = document.createElement("button");
-    b.textContent = d.tab;
-    b.className = i === cur ? "active" : "";
-    b.onclick = () => showDay(i);
-    $("tabs").appendChild(b);
-  });
+  const today = tNow().date, tabs = $("tabs");
+  tabs.innerHTML = S.days.map((x, i) => `<button class="${i === cur ? "active" : ""} ${x.date === today ? "today" : ""}" data-i="${i}"><small>${wd(x.date)} ${x.icon || ""}</small>${dm(x.date)}</button>`).join("");
+  tabs.querySelectorAll("button").forEach(b => b.onclick = () => showDay(+b.dataset.i, +b.dataset.i > cur ? "l" : "r"));
+  const a = tabs.children[cur];
+  tabs.scrollTo({left: a.offsetLeft - tabs.clientWidth / 2 + a.clientWidth / 2, behavior: "smooth"});
+}
+
+function renderNowbar(loc) {
+  const nb = $("nowbar");
+  if (!loc || (loc.cur < 0 && loc.next < 0)) { nb.hidden = true; return; }
+  const items = S.days[loc.di].items, c = items[loc.cur], n = items[loc.next];
+  nb.hidden = false;
+  nb.innerHTML = (c ? `<b>● Jetzt:</b> ${esc(c[1])}` : `<b>● Heute</b>`) + (n ? `<br><span class="mut">Als Nächstes ${esc(n[0])} · ${esc(n[1])} · in ${fmtMin(loc.inMin)}</span>` : "");
+  nb.onclick = () => {
+    if (cur !== loc.di) showDay(loc.di);
+    setTimeout(() => document.querySelector(".item.now, .item.next")?.scrollIntoView({behavior: "smooth", block: "center"}), 80);
+  };
+}
+
+function updateProgress() {
+  const it = S.days[cur].items, done = it.filter(x => x[4]).length;
+  const bar = document.querySelector("#daycard .progress i");
+  if (!bar) return;
+  bar.style.width = (it.length ? done / it.length * 100 : 0) + "%";
+  $("ptext").textContent = `${done} von ${it.length} erledigt`;
+}
+
+function renderPlan() {
+  const d = S.days[cur], loc = locate(), L = loc && loc.di === cur ? loc : null;
+  lastLoc = JSON.stringify(loc);
+  document.body.classList.toggle("editing", edit);
+  renderTabs();
+  renderNowbar(loc);
+
+  const sun = SUN[d.date];
+  const light = sun ? toMin(sun[1]) - toMin(sun[0]) : 0;
+  const stops = [...new Set(d.items.filter(x => x[2]).map(x => x[2]))];
+  const long = new Date(d.date + "T12:00:00").toLocaleDateString("de-DE", {weekday: "long", day: "numeric", month: "long"});
+  $("daycard").innerHTML = `
+    <h2 id="dtitle" ${edit ? 'contenteditable="true"' : ""}>${esc(d.title)}</h2>
+    <div class="meta"><span>📅 ${long}</span><span>${wxText(d)}</span>
+      ${sun ? `<span>🌅 ${sun[0]} · 🌇 ${sun[1]}</span><span>☀️ ${Math.floor(light / 60)} h ${light % 60} min Licht</span>` : ""}</div>
+    <div class="progress"><i></i></div><div class="meta" id="ptext"></div>
+    <div class="actions">${edit
+      ? `<button class="pill" id="bSort">⇅ Nach Zeit sortieren</button><button class="pill primary" id="bEdit">✅ Fertig</button>`
+      : `<a class="pill" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/${stops.map(encodeURIComponent).join("/")}/data=!4m2!4m1!3e2">🗺️ Tagesroute</a><button class="pill" id="bEdit">✏️ Bearbeiten</button>`}</div>`;
+  $("bEdit").onclick = () => { edit = !edit; openIdx = null; renderPlan(); if (!edit) toast("Gespeichert ✓"); };
+  if (edit) {
+    $("dtitle").oninput = e => { d.title = e.target.textContent; save(); };
+    $("bSort").onclick = () => {
+      d.items = d.items.map(it => [it, toMin(it[0]) ?? 1e9]).sort((a, b) => a[1] - b[1]).map(x => x[0]);
+      save(); renderPlan(); toast("Sortiert");
+    };
+  }
+
+  const ul = $("list");
+  ul.innerHTML = "";
+  d.items.forEach((it, k) => ul.appendChild(edit ? editRow(d, it, k) : viewRow(it, k, L)));
+  if (edit) {
+    const add = document.createElement("li");
+    add.className = "item add";
+    add.textContent = "＋ Eintrag hinzufügen";
+    add.onclick = () => { d.items.push(["", "", "", ""]); save(); renderPlan(); ul.children[d.items.length - 1].querySelector("input").focus(); };
+    ul.appendChild(add);
+  }
+  updateProgress();
+}
+
+function viewRow(it, k, L) {
+  const [time, title, q, note, dn] = it, li = document.createElement("li");
+  const isNow = L && L.cur === k, isNext = L && L.next === k;
+  li.className = "item" + (q ? " loc" : "") + (dn ? " done" : "") + (isNow ? " now" : "") + (isNext ? " next" : "") + (openIdx === k ? " open" : "");
+  li.innerHTML = `<div class="row"><input type="checkbox" class="check" aria-label="erledigt" ${dn ? "checked" : ""}>
+    <div class="body"><span class="time">${esc(time)}${isNow ? '<span class="badge">JETZT</span>' : ""}${isNext ? `<span class="badge nx">in ${fmtMin(L.inMin)}</span>` : ""}</span>
+    <span class="title">${esc(title)}</span>${note ? `<span class="note">${linkify(esc(note))}</span>` : ""}</div>
+    ${q ? '<span class="chev">›</span>' : ""}</div>${q ? '<div class="detail"></div>' : ""}`;
+  const cb = li.querySelector(".check");
+  cb.onclick = e => e.stopPropagation();
+  cb.onchange = () => { it[4] = cb.checked; li.classList.toggle("done", cb.checked); buzz(); save(); updateProgress(); };
+  if (q) {
+    li.querySelector(".row").onclick = () => toggleOpen(li, k, q);
+    if (openIdx === k) fillDetail(li, q);
+  }
+  return li;
+}
+
+function fillDetail(li, q) {
+  li.querySelector(".detail").innerHTML = (mobile.matches ? `<iframe loading="lazy" src="${embed(q)}" title="Karte"></iframe>` : "") +
+    `<div class="actions"><a class="pill primary" target="_blank" rel="noopener" href="${navUrl(q)}">🧭 Navigation</a><a class="pill" target="_blank" rel="noopener" href="${mapsUrl(q)}">🗺️ Google Maps</a></div>`;
+  if (!mobile.matches) $("map").src = embed(q);
+}
+
+function toggleOpen(li, k, q) {
+  const was = openIdx === k;
+  document.querySelectorAll(".item.open").forEach(x => { x.classList.remove("open"); x.querySelector(".detail").innerHTML = ""; });
+  openIdx = was ? null : k;
+  if (was) return;
+  li.classList.add("open");
+  fillDetail(li, q);
+  if (mobile.matches) setTimeout(() => li.scrollIntoView({behavior: "smooth", block: "nearest"}), 60);
 }
 
 function editRow(d, it, k) {
   const li = document.createElement("li");
-  li.className = "edit";
-  li.innerHTML = `<input value="${esc(it[0])}" placeholder="Zeit"><input value="${esc(it[1])}" placeholder="Titel">
-    <input class="e-q" value="${esc(it[2])}" placeholder="📍 Ort (Google-Maps-Suche, optional)">
-    <input class="e-note" value="${esc(it[3])}" placeholder="📝 Notiz / Link (optional)">
-    <div class="e-btns"><button data-a="up" title="Nach oben">↑</button><button data-a="down" title="Nach unten">↓</button><button data-a="del" title="Löschen">🗑️</button></div>`;
+  li.className = "item edit";
+  li.innerHTML = `<input class="field" value="${esc(it[0])}" placeholder="Zeit"><input class="field" value="${esc(it[1])}" placeholder="Titel">
+    <input class="field full" value="${esc(it[2])}" placeholder="📍 Ort (Google-Maps-Suche)">
+    <input class="field full" value="${esc(it[3])}" placeholder="📝 Notiz / Link">
+    <div class="e-btns"><button data-a="up" aria-label="Nach oben">↑</button><button data-a="down" aria-label="Nach unten">↓</button><button data-a="del" aria-label="Löschen">🗑️</button></div>`;
   li.querySelectorAll("input").forEach((inp, f) => inp.oninput = () => { it[f] = inp.value; save(); });
-  li.querySelector(".e-q").onchange = e => e.target.value && ($("map").src = embed(e.target.value));
+  li.querySelectorAll("input")[2].onchange = e => e.target.value && !mobile.matches && ($("map").src = embed(e.target.value));
   li.querySelectorAll("button").forEach(b => b.onclick = () => {
     const a = b.dataset.a;
     if (a === "del") {
-      if (!confirm(`„${it[1]}“ löschen?`)) return;
+      if (!confirm(`„${it[1] || "Eintrag"}“ löschen?`)) return;
       d.items.splice(k, 1);
     } else {
       const j = k + (a === "up" ? -1 : 1);
       if (j < 0 || j >= d.items.length) return;
       [d.items[k], d.items[j]] = [d.items[j], d.items[k]];
     }
-    save(); showDay(cur);
+    buzz(); save(); renderPlan();
   });
   return li;
 }
 
-function viewRow(it) {
-  const [time, title, q, note, dn] = it, li = document.createElement("li");
-  li.className = (q ? "" : "noloc ") + (dn ? "done" : "");
-  li.innerHTML = `<input type="checkbox" ${dn ? "checked" : ""}><span class="time">${esc(time)}</span>
-    <span class="t">${esc(title)}${note ? `<small>${linkify(esc(note))}</small>` : ""}</span>${q ? '<span class="pin">📍</span>' : ""}`;
-  const cb = li.firstChild;
-  cb.onclick = e => { e.stopPropagation(); it[4] = cb.checked; li.classList.toggle("done", cb.checked); save(); };
-  if (q) li.onclick = () => {
-    document.querySelectorAll("li.sel").forEach(x => x.classList.remove("sel"));
-    li.classList.add("sel");
-    $("map").src = embed(q);
-  };
-  return li;
+function showDay(i, dir) {
+  cur = i; openIdx = null;
+  history.replaceState(null, "", location.search + "#" + S.days[i].id);
+  renderPlan();
+  if (!mobile.matches) $("map").src = embed(S.days[i].city);
+  const col = $("daycol");
+  col.classList.remove("slide-l", "slide-r");
+  if (dir) { void col.offsetWidth; col.classList.add("slide-" + dir); }
+  const top = $("tabs").offsetTop;
+  if (scrollY > top) scrollTo({top, behavior: "smooth"});
 }
 
-function showDay(i) {
-  cur = i;
-  const d = DAYS[i];
-  history.replaceState(null, "", "#" + d.id);
-  renderTabs();
-  document.body.classList.toggle("editing", edit);
-  const h = $("daytitle");
-  h.textContent = d.title;
-  h.contentEditable = edit;
-  h.oninput = () => { d.title = h.textContent; save(); };
-  const stops = [...new Set(d.items.filter(x => x[2]).map(x => x[2]))];
-  $("route").href = "https://www.google.com/maps/dir/" + stops.map(encodeURIComponent).join("/") + "/data=!4m2!4m1!3e2";
-  $("map").src = embed(d.city);
-  const ul = $("list");
-  ul.innerHTML = "";
-  d.items.forEach((it, k) => ul.appendChild(edit ? editRow(d, it, k) : viewRow(it)));
-  if (edit) {
-    const add = document.createElement("li");
-    add.className = "add";
-    add.textContent = "＋ Eintrag hinzufügen";
-    add.onclick = () => { d.items.push(["", "Neuer Eintrag", "", ""]); save(); showDay(cur); };
-    ul.appendChild(add);
+/* Swipe zwischen Tagen */
+let sx = 0, sy = 0;
+$("daycol").addEventListener("touchstart", e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, {passive: true});
+$("daycol").addEventListener("touchend", e => {
+  if (edit) return;
+  const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+  if (Math.abs(dx) < 70 || Math.abs(dy) > 60) return;
+  const n = cur + (dx < 0 ? 1 : -1);
+  if (n >= 0 && n < S.days.length) { buzz(); showDay(n, dx < 0 ? "l" : "r"); }
+});
+
+/* ---------- Kasse ---------- */
+let selCat = CATS[0][0];
+function renderMoney() {
+  const P = S.people, E = S.expenses;
+  const total = E.reduce((a, e) => a + e.a, 0), share = total / P.length;
+  const paid = P.map((_, i) => E.filter(e => e.p === i).reduce((a, e) => a + e.a, 0));
+  const bal = paid.map(v => v - share);
+  const deb = bal.map((b, i) => [i, b]).filter(x => x[1] < -0.005), cre = bal.map((b, i) => [i, b]).filter(x => x[1] > 0.005);
+  const tx = [];
+  for (let i = 0, j = 0; i < deb.length && j < cre.length;) {
+    const m = Math.min(-deb[i][1], cre[j][1]);
+    tx.push([deb[i][0], cre[j][0], m]);
+    deb[i][1] += m; cre[j][1] -= m;
+    if (deb[i][1] > -0.005) i++;
+    if (cre[j][1] < 0.005) j++;
   }
+  const byCat = CATS.map(c => [c, E.filter(e => e.c === c[0]).reduce((a, e) => a + e.a, 0)]).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]);
+  const maxCat = byCat[0]?.[1] || 1;
+
+  $("v-money").innerHTML = `<div class="page">
+    <div class="card hero"><span class="mut">Gesamtausgaben</span><div class="big">${eur(total)}</div>
+      <span class="mut">${eur(share || 0)} pro Person · ${E.length} Ausgaben</span>
+      ${byCat.map(([c, v]) => `<div class="cbar"><span style="width:24px">${c[0]}</span><i style="width:${v / maxCat * 60}%"></i><span>${eur(v)}</span></div>`).join("")}
+    </div>
+    <div class="card"><h3>➕ Neue Ausgabe</h3><div class="form">
+      <input id="mA" class="field" inputmode="decimal" placeholder="Betrag in €">
+      <select id="mP" class="field">${P.map((n, i) => `<option value="${i}">${esc(n)} zahlt</option>`).join("")}</select>
+      <input id="mT" class="field full" placeholder="Wofür? z. B. Rataskaevu 16" enterkeyhint="done">
+      <div class="cats full">${CATS.map(c => `<button class="cat ${c[0] === selCat ? "sel" : ""}" data-c="${c[0]}">${c[0]}<small>${c[1]}</small></button>`).join("")}</div>
+      <button id="mAdd" class="pill primary full">Hinzufügen</button></div></div>
+    <div class="card"><h3>⚖️ Ausgleich</h3><ul class="plain">
+      ${P.map((n, i) => `<li><span class="grow">${esc(n)} <span class="mut">hat ${eur(paid[i])} bezahlt</span></span><span class="amt ${bal[i] >= 0 ? "pos" : "neg"}">${bal[i] >= 0 ? "+" : ""}${eur(bal[i] || 0)}</span></li>`).join("")}
+      ${tx.length ? tx.map(([a, b, m]) => `<li><span class="grow">💸 <b>${esc(P[a])}</b> → <b>${esc(P[b])}</b></span><span class="amt">${eur(m)}</span></li>`).join("") : `<li class="mut">✨ Alles ausgeglichen</li>`}
+    </ul></div>
+    <div class="card"><h3>🧾 Ausgaben</h3><ul class="plain">
+      ${E.length ? E.map((e, i) => [e, i]).reverse().map(([e, i]) => `<li><span style="font-size:1.3rem">${e.c}</span><span class="grow">${esc(e.t || "Ausgabe")}<br><span class="mut">${esc(P[e.p] ?? "?")} · ${dm(e.d)}</span></span><span class="amt">${eur(e.a)}</span><button class="x" data-del="${i}" aria-label="Löschen">✕</button></li>`).join("") : `<li class="mut">Noch keine Ausgaben</li>`}
+    </ul></div>
+    <div class="card"><h3>👥 Reisende</h3><input id="mPeople" class="field" value="${esc(P.join(", "))}">
+      <p class="mut">Namen kommagetrennt · Ausgaben werden gleichmäßig aufgeteilt · 🇪🇪 & 🇫🇮 zahlen beide in Euro</p></div>
+  </div>`;
+
+  document.querySelectorAll(".cat").forEach(b => b.onclick = () => { selCat = b.dataset.c; document.querySelectorAll(".cat").forEach(x => x.classList.toggle("sel", x === b)); buzz(); });
+  const add = () => {
+    const a = parseFloat($("mA").value.replace(",", "."));
+    if (!(a > 0)) { toast("Bitte Betrag eingeben"); $("mA").focus(); return; }
+    S.expenses.push({a: Math.round(a * 100) / 100, t: $("mT").value.trim(), p: +$("mP").value, c: selCat, d: tNow().date});
+    save(); buzz(); renderMoney(); toast(`${eur(a)} gespeichert`);
+  };
+  $("mAdd").onclick = add;
+  $("mT").onkeydown = e => e.key === "Enter" && add();
+  document.querySelectorAll("[data-del]").forEach(b => b.onclick = () => {
+    if (!confirm("Ausgabe löschen?")) return;
+    S.expenses.splice(+b.dataset.del, 1); save(); renderMoney();
+  });
+  $("mPeople").onchange = e => {
+    const names = e.target.value.split(",").map(s => s.trim()).filter(Boolean);
+    if (names.length) { S.people = names; save(); renderMoney(); }
+  };
 }
 
-$("bEdit").onclick = () => {
-  edit = !edit;
-  $("bEdit").textContent = edit ? "✅ Fertig" : "✏️ Bearbeiten";
-  showDay(cur);
-};
-$("bExp").onclick = () => {
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(DAYS, null, 1)], {type: "application/json"}));
-  a.download = "reiseplan.json";
-  a.click();
-};
-$("bImp").onclick = () => $("file").click();
-$("file").onchange = async e => {
-  try {
-    const data = JSON.parse(await e.target.files[0].text());
-    if (!Array.isArray(data) || !data.every(d => d.title && Array.isArray(d.items))) throw 0;
-    DAYS = data; save(); showDay(0);
-  } catch { alert("Ungültige Datei – bitte eine exportierte reiseplan.json wählen."); }
-  e.target.value = "";
-};
-$("bReset").onclick = () => {
-  if (!confirm("Alle Änderungen und Häkchen verwerfen und den Originalplan laden?")) return;
-  localStorage.removeItem("plan");
-  DAYS = structuredClone(DEFAULT_DAYS);
-  showDay(Math.min(cur, DAYS.length - 1));
-};
+/* ---------- Packliste ---------- */
+function renderPack() {
+  const L = S.packing, done = L.filter(x => x[1]).length;
+  $("v-pack").innerHTML = `<div class="page">
+    <div class="card hero"><span class="mut">Packliste</span><div class="big">${done} / ${L.length}</div>
+      <div class="progress"><i style="width:${L.length ? done / L.length * 100 : 0}%"></i></div>
+      <span class="mut">${done === L.length && L.length ? "🎉 Alles gepackt – ab in den Norden!" : "Im Dezember ist es dort kalt: ca. −1° bis −6°"}</span></div>
+    <div class="card"><div class="addrow"><input id="pNew" class="field" placeholder="Neuer Gegenstand" enterkeyhint="done"><button id="pAdd" class="pill primary" aria-label="Hinzufügen">＋</button></div>
+      <ul class="plain">${L.map((x, i) => `<li class="${x[1] ? "done" : ""}"><label><input type="checkbox" class="check" data-i="${i}" ${x[1] ? "checked" : ""}><span>${esc(x[0])}</span></label><button class="x" data-del="${i}" aria-label="Löschen">✕</button></li>`).join("")}</ul>
+    </div></div>`;
+  document.querySelectorAll("#v-pack .check").forEach(c => c.onchange = () => { L[+c.dataset.i][1] = c.checked; buzz(); save(); renderPack(); });
+  document.querySelectorAll("#v-pack [data-del]").forEach(b => b.onclick = () => { L.splice(+b.dataset.del, 1); save(); renderPack(); });
+  const add = () => { const v = $("pNew").value.trim(); if (!v) return; L.push([v, false]); save(); renderPack(); $("pNew").focus(); };
+  $("pAdd").onclick = add;
+  $("pNew").onkeydown = e => e.key === "Enter" && add();
+}
 
-showDay(Math.max(0, DAYS.findIndex(d => "#" + d.id === location.hash)));
+/* ---------- Infos ---------- */
+const PHRASES = [["Hallo","Tere","Moi / Hei"],["Danke","Aitäh","Kiitos"],["Bitte","Palun","Ole hyvä"],["Ja / Nein","Jah / Ei","Kyllä / Ei"],["Entschuldigung","Vabandust","Anteeksi"],["Ein Bier, bitte","Üks õlu, palun","Yksi olut, kiitos"],["Die Rechnung, bitte","Arve, palun","Lasku, kiitos"],["Prost!","Terviseks!","Kippis!"],["Frohes neues Jahr!","Head uut aastat!","Hyvää uutta vuotta!"],["Tschüss","Head aega","Heippa / Moikka"]];
+const FACTS = ["🚨 Notruf: <b>112</b> in beiden Ländern","💶 Euro in Estland & Finnland","🕐 Osteuropäische Zeit: Deutschland <b>+1 h</b>","🔌 Steckdosen Typ C/F – kein Adapter nötig","🌅 Nur ca. 6 Stunden Tageslicht – Sightseeing früh starten","🚕 Tallinn: Bolt-App für Taxis (Bolt ist ein estnisches Startup)","🚋 Helsinki: HSL-App für Tram, Bus & Suomenlinna-Fähre","💧 Leitungswasser ist in beiden Städten trinkbar","🧾 Trinkgeld wird nicht erwartet, ~5–10 % bei gutem Service","🧖 Sauna-Etikette: vorher duschen, im Löyly mit Badesachen"];
+let installEvt = null;
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; if ($("bInstall")) $("bInstall").hidden = false; });
 
-const start = new Date("2026-12-30T12:40:00+02:00");
+function renderInfo() {
+  $("v-info").innerHTML = `<div class="page">
+    <div class="card"><h3>🎫 Buchungen & Adressen</h3>
+      ${S.bookings.map((b, i) => `<div class="bk"><input class="field" data-k="${i}" value="${esc(b.k)}"><button class="x" data-del="${i}" aria-label="Löschen">✕</button><textarea class="field" data-v="${i}" rows="2">${esc(b.v)}</textarea></div>`).join("")}
+      <button class="pill" id="bkAdd" style="width:100%">＋ Eintrag</button></div>
+    <div class="card"><h3>💡 Gut zu wissen</h3><ul class="facts">${FACTS.map(f => `<li>${f}</li>`).join("")}</ul></div>
+    <div class="card"><h3>🗣️ Mini-Sprachführer</h3><table class="phr"><tr><th>🇩🇪</th><th>🇪🇪 Estnisch</th><th>🇫🇮 Finnisch</th></tr>
+      ${PHRASES.map(p => `<tr><td>${p[0]}</td><td>${p[1]}</td><td>${p[2]}</td></tr>`).join("")}</table></div>
+    <div class="card"><h3>📲 Als App installieren</h3>
+      <p class="mut">iPhone: in Safari <b>Teilen → Zum Home-Bildschirm</b>. Android: Menü → <b>App installieren</b>. Der Plan funktioniert danach auch offline (Karten brauchen Internet).</p>
+      <button class="pill primary" id="bInstall" style="width:100%" ${installEvt ? "" : "hidden"}>📲 Jetzt installieren</button></div>
+    <div class="card"><h3>💾 Daten</h3>
+      <p class="mut">Alles wird nur auf diesem Gerät gespeichert. Mit Export/Import überträgst du Plan, Kasse & Packliste auf ein anderes Gerät.</p>
+      <div class="actions"><button class="pill" id="bExp">💾 Export</button><button class="pill" id="bImp">📂 Import</button><button class="pill" id="bReset">↺ Reset</button></div>
+      <input type="file" id="file" accept=".json,application/json" hidden></div>
+    <div class="card"><h3>🕰️ Zeitreise (Vorschau)</h3>
+      <p class="mut">Simuliere eine Uhrzeit (Tallinn-Zeit), um den Live-Modus und das Silvester-Feuerwerk zu testen.</p>
+      <div class="addrow"><input type="datetime-local" id="simT" class="field" value="2026-12-31T23:59"><button class="pill primary" id="bSim" aria-label="Übernehmen">▶</button></div>
+      ${timeOffset ? `<button class="pill" id="bReal" style="width:100%">⏹ Zurück zur echten Zeit</button>` : ""}</div>
+  </div>`;
+
+  document.querySelectorAll("[data-k]").forEach(x => x.oninput = () => { S.bookings[+x.dataset.k].k = x.value; save(); });
+  document.querySelectorAll("[data-v]").forEach(x => {
+    const fit = () => { x.style.height = "auto"; x.style.height = x.scrollHeight + 2 + "px"; };
+    x.oninput = () => { S.bookings[+x.dataset.v].v = x.value; save(); fit(); };
+    requestAnimationFrame(fit);
+  });
+  document.querySelectorAll("#v-info [data-del]").forEach(b => b.onclick = () => { if (confirm("Eintrag löschen?")) { S.bookings.splice(+b.dataset.del, 1); save(); renderInfo(); } });
+  $("bkAdd").onclick = () => { S.bookings.push({k: "📌 Neu", v: ""}); save(); renderInfo(); };
+  $("bInstall").onclick = async () => { if (!installEvt) return; installEvt.prompt(); await installEvt.userChoice; installEvt = null; $("bInstall").hidden = true; };
+  $("bExp").onclick = () => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 1)], {type: "application/json"}));
+    a.download = "reiseplan.json";
+    a.click();
+    toast("Export erstellt");
+  };
+  $("bImp").onclick = () => $("file").click();
+  $("file").onchange = async e => {
+    try {
+      const data = JSON.parse(await e.target.files[0].text());
+      const n = normalize(data);
+      if (!n.days.every(d => d.title && Array.isArray(d.items))) throw 0;
+      S = n; save(); cur = 0; renderAll(); toast("Import erfolgreich ✓");
+    } catch { alert("Ungültige Datei – bitte eine exportierte reiseplan.json wählen."); }
+    e.target.value = "";
+  };
+  $("bReset").onclick = () => {
+    if (!confirm("Alles (Plan, Kasse, Packliste, Buchungen) auf den Ausgangszustand zurücksetzen?")) return;
+    localStorage.removeItem(KEY); localStorage.removeItem("plan");
+    S = normalize({}); cur = 0; renderAll(); toast("Zurückgesetzt");
+  };
+  $("bSim").onclick = () => {
+    const v = $("simT").value;
+    if (!v) return;
+    timeOffset = new Date(v + ":00+02:00") - Date.now();
+    fired = false; renderAll(); tick(); toast("Zeitreise aktiv 🕰️");
+  };
+  if ($("bReal")) $("bReal").onclick = () => { timeOffset = 0; renderAll(); tick(); toast("Echtzeit"); };
+}
+
+/* ---------- Navigation ---------- */
+function switchView(v) {
+  document.querySelectorAll(".view").forEach(x => x.classList.toggle("active", x.id === "v-" + v));
+  document.querySelectorAll("#bottom button").forEach(b => b.classList.toggle("active", b.dataset.v === v));
+  ({plan: renderPlan, money: renderMoney, pack: renderPack, info: renderInfo})[v]();
+  scrollTo({top: 0});
+}
+document.querySelectorAll("#bottom button").forEach(b => b.onclick = () => { buzz(); switchView(b.dataset.v); });
+function renderAll() {
+  const v = document.querySelector("#bottom .active").dataset.v;
+  renderPlan();
+  if (v !== "plan") switchView(v);
+}
+mobile.onchange = () => renderPlan();
+
+/* ---------- Countdown ---------- */
+let fired = false;
 function tick() {
-  const ms = start - new Date();
-  if (ms <= 0) { $("countdown").textContent = "🎉 Wir sind unterwegs!"; return; }
-  const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60;
-  $("countdown").textContent = `Noch ${d} Tage, ${h} Std., ${m} Min. bis zur Landung in Tallinn`;
+  const n = now(), cd = $("countdown");
+  let target = null, label = "";
+  if (n < LAND) { target = LAND; label = "bis zur Landung in Tallinn ✈️"; }
+  else if (n < NY) { target = NY; label = "bis 2027 🎆"; }
+  if (target) {
+    const s = Math.floor((target - n) / 1000);
+    const parts = [[Math.floor(s / 86400), "Tage"], [Math.floor(s / 3600) % 24, "Std"], [Math.floor(s / 60) % 60, "Min"], [s % 60, "Sek"]];
+    cd.innerHTML = `<div class="cd">${parts.map(([v, l]) => `<div><b>${String(v).padStart(2, "0")}</b><span>${l}</span></div>`).join("")}</div><div class="cdlabel">${label}</div>`;
+    cd.classList.toggle("final", target === NY && s <= 10);
+  } else {
+    cd.classList.remove("final");
+    const di = S.days.findIndex(d => d.date === tNow().date);
+    cd.innerHTML = `<div class="cdtext">${n < BACK ? `🥂 Head uut aastat! ${di >= 0 ? `· Tag ${di + 1} von ${S.days.length}` : ""}` : "Schön war's 💛"}</div>`;
+  }
+  if (!fired && n >= NY && n - NY < 120000) { fired = true; fireworks(30); }
+  const loc = JSON.stringify(locate());
+  if (loc !== lastLoc && !edit && $("v-plan").classList.contains("active")) renderPlan();
 }
-tick(); setInterval(tick, 60000);
+$("countdown").onclick = () => fireworks(6);
+
+/* ---------- Feuerwerk ---------- */
+let fwEnd = 0, fwRun = false, parts = [];
+function fireworks(sec) {
+  const c = $("fw"), x = c.getContext("2d"), dpr = devicePixelRatio || 1;
+  c.width = innerWidth * dpr; c.height = innerHeight * dpr; c.style.display = "block";
+  fwEnd = Date.now() + sec * 1000;
+  buzz();
+  if (fwRun) return;
+  fwRun = true;
+  let last = 0;
+  const burst = () => {
+    const cx = c.width * (0.15 + Math.random() * 0.7), cy = c.height * (0.12 + Math.random() * 0.4), hue = Math.random() * 360;
+    for (let i = 0; i < 90; i++) {
+      const a = Math.random() * Math.PI * 2, s = (Math.random() * 4 + 1.5) * dpr;
+      parts.push({x: cx, y: cy, vx: Math.cos(a) * s, vy: Math.sin(a) * s, l: 1, h: hue + Math.random() * 40});
+    }
+  };
+  const frame = t => {
+    if (Date.now() < fwEnd && t - last > 380) { burst(); last = t; }
+    x.globalCompositeOperation = "destination-out";
+    x.fillStyle = "rgba(0,0,0,.2)";
+    x.fillRect(0, 0, c.width, c.height);
+    x.globalCompositeOperation = "lighter";
+    parts = parts.filter(p => p.l > 0);
+    for (const p of parts) {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.05 * dpr; p.vx *= 0.975; p.vy *= 0.975; p.l -= 0.011;
+      x.fillStyle = `hsla(${p.h},100%,65%,${p.l})`;
+      x.beginPath(); x.arc(p.x, p.y, 2 * dpr, 0, 7); x.fill();
+    }
+    if (Date.now() < fwEnd || parts.length) requestAnimationFrame(frame);
+    else { c.style.display = "none"; fwRun = false; }
+  };
+  requestAnimationFrame(frame);
+}
+$("bFw").onclick = () => fireworks(6);
+
+/* ---------- Wetter (Open-Meteo, max. 16 Tage Vorschau) ---------- */
+async function loadWeather() {
+  const today = tNow().date, limit = shiftDate(today, 15);
+  for (const c of ["ee", "fi"]) {
+    const ds = S.days.filter(d => d.c === c && d.date <= limit && d.date >= shiftDate(today, -30)).map(d => d.date).sort();
+    if (!ds.length) continue;
+    try {
+      const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${CITY[c][0]}&longitude=${CITY[c][1]}&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Europe%2FTallinn&start_date=${ds[0]}&end_date=${ds.at(-1)}`);
+      const j = await r.json();
+      j.daily.time.forEach((t, k) => WX[t] = {c: j.daily.weather_code[k], max: Math.round(j.daily.temperature_2m_max[k]), min: Math.round(j.daily.temperature_2m_min[k])});
+    } catch {}
+  }
+  localStorage.setItem("wx", JSON.stringify(WX));
+  if ($("v-plan").classList.contains("active") && !edit) renderPlan();
+}
+
+/* ---------- Start ---------- */
+const hashIdx = S.days.findIndex(d => "#" + d.id === location.hash);
+const loc0 = locate();
+cur = hashIdx >= 0 ? hashIdx : loc0 ? loc0.di : 0;
+showDay(cur);
+tick();
+setInterval(tick, 1000);
+loadWeather();
+if ("serviceWorker" in navigator && location.protocol !== "file:") navigator.serviceWorker.register("sw.js");
 </script>
 </body>
 </html>
