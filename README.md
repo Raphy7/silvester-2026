@@ -1,6 +1,6 @@
 # 🎆 Silvester 26/27 · Tallinn & Helsinki
 
-Interaktive Reiseplanungs-App für unseren Silvestertrip vom **30.12.2026 bis 04.01.2027** – 🇪🇪 Tallinn → ⛴️ Fähre → 🇫🇮 Helsinki.
+Interaktive Reiseplanungs-App für **Raphael & Jasmin** – Silvestertrip vom **30.12.2026 bis 04.01.2027**: 🇪🇪 Tallinn → ⛴️ Fähre → 🇫🇮 Helsinki.
 Eine reine HTML/JS-App ohne Build-Schritt, optimiert für das Smartphone, installierbar als App und offline nutzbar.
 
 ## Features
@@ -28,7 +28,8 @@ Eine reine HTML/JS-App ohne Build-Schritt, optimiert für das Smartphone, instal
 - Ausgaben mit Betrag, Beschreibung, Zahler und Kategorie (🍽️ 🍸 🚕 🎟️ 🛍️ 💫) erfassen
 - Gesamtsumme, Anteil pro Person und Balkendiagramm nach Kategorie
 - **Automatischer Ausgleich:** wer schuldet wem wie viel
-- Reisende frei benennbar, Kosten werden gleichmäßig aufgeteilt
+- Voreingestellt für **Raphael** und **Jasmin**; unter *Kasse* einmal antippen, **wer dieses Handy nutzt** – neue Ausgaben werden dann automatisch dem richtigen Zahler zugeordnet
+- Kosten werden zu gleichen Teilen geteilt
 
 ### 🎒 Packliste
 - Vorbefüllte Winter-Packliste (inkl. Badesachen für Löyly 🔥)
@@ -69,9 +70,9 @@ Eine reine HTML/JS-App ohne Build-Schritt, optimiert für das Smartphone, instal
 
 ## Daten & Speicherung
 
-- Alle Änderungen (Plan, Häkchen, Kasse, Packliste, Buchungen) liegen im **localStorage des jeweiligen Browsers** – es gibt keinen Server.
-- Zum Übertragen auf ein anderes Gerät: **Infos → 💾 Export**, Datei aufs Handy schicken, dort **📂 Import**.
-- Der Export eignet sich auch als Backup während der Reise.
+- Jeder Browser/Handy hat **eigenen Speicher** – Raphael und Jasmin sehen dieselben Daten nur, wenn ihr sie teilt.
+- **Sync zwischen zwei Handys:** wer etwas ändert (Plan, Häkchen, Ausgabe …) → **Infos → 💾 Export** → per WhatsApp, AirDrop o. Ä. schicken → auf dem anderen Gerät **📂 Import** (überschreibt den lokalen Stand).
+- Tipp: ab und zu exportieren als Backup; nach dem Import einmal kurz prüfen, ob Kasse und Packliste stimmen.
 
 ## Anpassen
 

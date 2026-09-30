@@ -156,7 +156,7 @@ textarea.field{resize:vertical;min-height:70px;margin-top:6px}
 <body>
 <header>
   <div class="brand">
-    <h1>🎆 Silvester 26/27<small>🇪🇪 Tallinn · 🇫🇮 Helsinki</small></h1>
+    <h1>🎆 Silvester 26/27<small>Raphael &amp; Jasmin · 🇪🇪 Tallinn · 🇫🇮 Helsinki</small></h1>
     <button class="icon-btn" id="bFw" aria-label="Feuerwerk">🎇</button>
   </div>
   <div id="countdown"></div>
@@ -266,7 +266,7 @@ const DEFAULTS = {
   ["ca. 12:30","Helsinki Airport","Helsinki Airport"],
   ["15:20","✈️ Rückflug","Helsinki Airport"]]}
  ],
- people: ["Ich", "Begleitung"],
+ people: ["Raphael", "Jasmin"],
  expenses: [],
  packing: ["Reisepass / Personalausweis","Handy + Ladekabel","Powerbank (Kälte leert Akkus!)","Winterjacke","Mütze, Schal, Handschuhe","Thermo-Unterwäsche","Warme Socken","Winterschuhe mit Profil","Badesachen für Löyly","Silvester-Outfit","Kreditkarte","Krankenversicherungskarte","Lippenpflege & Handcreme","Taschenwärmer","Kopfhörer"].map(n => [n, false]),
  bookings: [
@@ -300,12 +300,13 @@ const fmtMin = m => m < 60 ? `${m} Min.` : `${Math.floor(m / 60)} h ${m % 60 ? m
 const toMin = s => { const m = /(\d{1,2}):(\d{2})/.exec(s || ""); if (!m) return null; const v = +m[1] * 60 + +m[2]; return v < 300 ? v + 1440 : v; };
 
 /* ---------- State ---------- */
-const KEY = "trip-v2";
+const KEY = "trip-v2", ME_KEY = "trip-me";
 function normalize(s) {
   if (Array.isArray(s)) s = {days: s};
   const d = structuredClone(DEFAULTS);
   s = {...d, ...s};
   s.days = s.days.map(x => ({...(d.days.find(y => y.id === x.id) || {}), ...x}));
+  if (Array.isArray(s.people) && s.people[0] === "Ich" && s.people[1] === "Begleitung") s.people = ["Raphael", "Jasmin"];
   return s;
 }
 let S = normalize(JSON.parse(localStorage.getItem(KEY) || localStorage.getItem("plan") || "null") || {});
@@ -513,7 +514,10 @@ function renderMoney() {
       <span class="mut">${eur(share || 0)} pro Person · ${E.length} Ausgaben</span>
       ${byCat.map(([c, v]) => `<div class="cbar"><span style="width:24px">${c[0]}</span><i style="width:${v / maxCat * 60}%"></i><span>${eur(v)}</span></div>`).join("")}
     </div>
-    <div class="card"><h3>➕ Neue Ausgabe</h3><div class="form">
+    <div class="card"><h3>➕ Neue Ausgabe</h3>
+      <p class="mut" style="margin:0 0 10px">Wer dieses Handy nutzt:</p>
+      <div class="actions" style="margin-bottom:10px">${P.map((n, i) => `<button type="button" class="pill ${localStorage.getItem(ME_KEY) === String(i) ? "primary" : ""}" data-me="${i}">${esc(n)}</button>`).join("")}</div>
+      <div class="form">
       <input id="mA" class="field" inputmode="decimal" placeholder="Betrag in €">
       <select id="mP" class="field">${P.map((n, i) => `<option value="${i}">${esc(n)} zahlt</option>`).join("")}</select>
       <input id="mT" class="field full" placeholder="Wofür? z. B. Rataskaevu 16" enterkeyhint="done">
@@ -527,10 +531,19 @@ function renderMoney() {
       ${E.length ? E.map((e, i) => [e, i]).reverse().map(([e, i]) => `<li><span style="font-size:1.3rem">${e.c}</span><span class="grow">${esc(e.t || "Ausgabe")}<br><span class="mut">${esc(P[e.p] ?? "?")} · ${dm(e.d)}</span></span><span class="amt">${eur(e.a)}</span><button class="x" data-del="${i}" aria-label="Löschen">✕</button></li>`).join("") : `<li class="mut">Noch keine Ausgaben</li>`}
     </ul></div>
     <div class="card"><h3>👥 Reisende</h3><input id="mPeople" class="field" value="${esc(P.join(", "))}">
-      <p class="mut">Namen kommagetrennt · Ausgaben werden gleichmäßig aufgeteilt · 🇪🇪 & 🇫🇮 zahlen beide in Euro</p></div>
+      <p class="mut">Raphael &amp; Jasmin · Kosten werden zu gleichen Teilen geteilt · gleichen Stand auf beiden Handys per <b>Infos → Export/Import</b></p></div>
   </div>`;
 
   document.querySelectorAll(".cat").forEach(b => b.onclick = () => { selCat = b.dataset.c; document.querySelectorAll(".cat").forEach(x => x.classList.toggle("sel", x === b)); buzz(); });
+  const me = localStorage.getItem(ME_KEY);
+  if (me !== null && +me < P.length) $("mP").value = me;
+  document.querySelectorAll("[data-me]").forEach(b => b.onclick = () => {
+    localStorage.setItem(ME_KEY, b.dataset.me);
+    $("mP").value = b.dataset.me;
+    document.querySelectorAll("[data-me]").forEach(x => x.classList.toggle("primary", x === b));
+    buzz();
+    toast(`${P[+b.dataset.me]} auf diesem Gerät`);
+  });
   const add = () => {
     const a = parseFloat($("mA").value.replace(",", "."));
     if (!(a > 0)) { toast("Bitte Betrag eingeben"); $("mA").focus(); return; }
@@ -584,7 +597,7 @@ function renderInfo() {
       <p class="mut">iPhone: in Safari <b>Teilen → Zum Home-Bildschirm</b>. Android: Menü → <b>App installieren</b>. Der Plan funktioniert danach auch offline (Karten brauchen Internet).</p>
       <button class="pill primary" id="bInstall" style="width:100%" ${installEvt ? "" : "hidden"}>📲 Jetzt installieren</button></div>
     <div class="card"><h3>💾 Daten</h3>
-      <p class="mut">Alles wird nur auf diesem Gerät gespeichert. Mit Export/Import überträgst du Plan, Kasse & Packliste auf ein anderes Gerät.</p>
+      <p class="mut">Raphael &amp; Jasmin: Jeder Handy speichert lokal. Wer etwas ändert, exportiert <code>reiseplan.json</code> und schickt sie dem anderen – dort Import. So bleibt Plan, Kasse &amp; Packliste gleich.</p>
       <div class="actions"><button class="pill" id="bExp">💾 Export</button><button class="pill" id="bImp">📂 Import</button><button class="pill" id="bReset">↺ Reset</button></div>
       <input type="file" id="file" accept=".json,application/json" hidden></div>
     <div class="card"><h3>🕰️ Zeitreise (Vorschau)</h3>
