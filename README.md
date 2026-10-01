@@ -74,7 +74,7 @@ Eine reine HTML/JS-App ohne Build-Schritt, optimiert für das Smartphone, instal
 ## Daten & Speicherung
 
 - **Cloud-Sync (empfohlen):** Firebase Firestore, verschlüsselt mit gemeinsamer Passphrase – Echtzeit zwischen Raphael & Jasmin. Einmalig einrichten: **[FIREBASE_SETUP.md](FIREBASE_SETUP.md)**.
-- In der App: **Infos → ☁️ Cloud-Sync** → Raum erstellen / Trip-ID teilen → gleiche Passphrase → **Sync aktivieren**.
+- In der App: **Infos → ☁️ Cloud-Sync** → Raum erstellen / Trip-ID teilen → gleiche Passphrase → **Verbinden**.
 - **Backup:** **Infos → 💾 Export/Import** (`reiseplan.json`) als Fallback ohne Netz oder vor dem ersten Sync.
 
 ## Anpassen

@@ -15,6 +15,7 @@ let passphrase = "";
 let pushTimer = null;
 let pushing = false;
 let applyingRemote = false;
+let bootstrapping = false;
 let lastApplied = 0;
 let status = { state: "off", detail: "" };
 
@@ -99,9 +100,9 @@ async function ensureRef() {
   return docRef;
 }
 
-async function applyRemote(data) {
+async function applyRemote(data, force = false) {
   if (!data?.cipher || !data?.iv) return;
-  if (data.updatedAt && data.updatedAt <= lastApplied) return;
+  if (!force && data.updatedAt && data.updatedAt <= lastApplied) return;
   try {
     const plain = await decrypt(data.cipher, data.iv, passphrase, tripId);
     const parsed = JSON.parse(plain);
@@ -133,6 +134,45 @@ async function startListener() {
   });
 }
 
+/** Beim Aktivieren: Cloud zuerst laden, wenn dort schon Daten liegen – nie blind überschreiben. */
+async function reconcileOnEnable() {
+  const { getDoc } = await loadFirebase();
+  const ref = await ensureRef();
+  const snap = await getDoc(ref);
+  const localAt = +(localStorage.getItem(LOCAL_AT_KEY) || 0);
+
+  if (!snap.exists()) {
+    await pushNow();
+    setStatus("live", "Erster Cloud-Stand hochgeladen");
+    return;
+  }
+
+  const remote = snap.data();
+  const remoteAt = remote.updatedAt || 0;
+
+  // Neues Gerät / noch nie synchronisiert → immer vom Server holen
+  if (!localAt) {
+    await applyRemote(remote, true);
+    setStatus("live", "Cloud-Stand auf dieses Gerät geladen");
+    return;
+  }
+
+  if (remoteAt > localAt) {
+    await applyRemote(remote, true);
+    setStatus("live", "Neuerer Cloud-Stand geladen");
+    return;
+  }
+
+  if (localAt > remoteAt) {
+    await pushNow();
+    setStatus("live", "Lokale Änderungen hochgeladen");
+    return;
+  }
+
+  await applyRemote(remote, true);
+  setStatus("live", "Sync aktiv");
+}
+
 export async function enableSync(pass, id) {
   if (!isFirebaseConfigured()) throw new Error("Firebase nicht konfiguriert – siehe README");
   if (!pass || pass.length < 6) throw new Error("Passphrase mindestens 6 Zeichen");
@@ -143,9 +183,13 @@ export async function enableSync(pass, id) {
   enabled = true;
   saveCfg({ tripId, enabled: true });
   setStatus("connecting", "Verbinde …");
-  await startListener();
-  setStatus("live", "Sync aktiv");
-  await pushNow();
+  bootstrapping = true;
+  try {
+    await startListener();
+    await reconcileOnEnable();
+  } finally {
+    bootstrapping = false;
+  }
 }
 
 export function disableSync() {
@@ -166,7 +210,7 @@ export function createTripId() {
 export function getTripId() { return loadCfg().tripId || ""; }
 
 export function schedulePush(state) {
-  if (!enabled || applyingRemote || !passphrase || !tripId) return;
+  if (!enabled || applyingRemote || bootstrapping || !passphrase || !tripId) return;
   clearTimeout(pushTimer);
   pushTimer = setTimeout(() => pushNow(state), 700);
 }
@@ -199,7 +243,7 @@ export async function pullNow() {
   const { getDoc, doc: docFn } = await loadFirebase();
   const snap = await getDoc(docFn(db, "trips", tripId));
   if (!snap.exists()) return false;
-  await applyRemote(snap.data());
+  await applyRemote(snap.data(), true);
   return true;
 }
 
@@ -211,7 +255,7 @@ export function init(cbs) {
   if (cfg.enabled && pass && tripId && isFirebaseConfigured()) {
     enableSync(pass, tripId).catch(e => setStatus("error", e.message));
   } else if (cfg.enabled && !pass) {
-    setStatus("locked", "Passphrase eingeben, um Sync fortzusetzen");
+    setStatus("locked", "Passphrase eingeben und in Infos verbinden");
   } else if (!isFirebaseConfigured()) {
     setStatus("off", "Firebase-Konfiguration fehlt");
   } else {

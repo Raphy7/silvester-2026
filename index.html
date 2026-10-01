@@ -663,7 +663,7 @@ function bindSyncControls() {
 function syncStatusLabel(st) {
   if (!st) return "Lade Sync …";
   if (!st.configured) return "Firebase noch nicht eingerichtet – siehe FIREBASE_SETUP.md im Repo";
-  const m = { off: "⚪ Aus", connecting: "🟡 Verbinde …", live: "🟢 Live", offline: "🟠 Offline", locked: "🔒 Passphrase eingeben", error: "🔴 Fehler" };
+  const m = { off: "⚪ Nicht verbunden", connecting: "🟡 Verbinde …", live: "🟢 Verbunden", offline: "🟠 Offline", locked: "🔒 Passphrase nötig", error: "🔴 Fehler" };
   return (m[st.state] || "⚪") + (st.detail ? " · " + st.detail : "");
 }
 function bindCloudSync() {
@@ -685,7 +685,7 @@ function bindCloudSync() {
     try { await navigator.clipboard.writeText(id); toast("Trip-ID kopiert"); }
     catch { prompt("Trip-ID kopieren:", id); }
   });
-  const activate = async () => {
+  const connect = async () => {
     if (!window.TripSync?.isFirebaseConfigured?.()) {
       alert("Firebase fehlt: firebase-config.js anlegen (siehe firebase-config.example.js und FIREBASE_SETUP.md).");
       return;
@@ -693,51 +693,40 @@ function bindCloudSync() {
     const id = idIn?.value?.trim();
     const pass = passIn?.value || "";
     if (!id) { toast("Trip-ID fehlt"); return; }
+    if (!pass || pass.length < 6) { toast("Passphrase (mind. 6 Zeichen)"); passIn?.focus(); return; }
     try {
       await window.TripSync.enableSync(pass, id);
       passIn.value = "";
-      toast("Cloud-Sync aktiv ✓");
-      bindCloudSync();
+      toast("Verbunden ✓");
+      renderInfo();
     } catch (e) { alert(e.message || e); bindCloudSync(); }
   };
-  on("bSyncOn", () => activate());
-  on("bSyncResume", () => activate());
-  on("bSyncPush", async () => {
-    try { await window.TripSync.pushNow(); toast("Hochgeladen"); } catch (e) { alert(e.message || e); }
-    bindCloudSync();
-  });
-  on("bSyncPull", async () => {
-    try {
-      if (await window.TripSync.pullNow()) toast("Vom Server geladen");
-      else toast("Noch kein Cloud-Stand");
-    } catch (e) { alert(e.message || e); }
-    bindCloudSync();
-  });
+  on("bSyncConnect", () => connect());
+  if (passIn) passIn.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); connect(); } };
   on("bSyncOff", () => {
     if (!confirm("Cloud-Sync auf diesem Gerät deaktivieren? (Daten bleiben lokal und in der Cloud.)")) return;
     window.TripSync.disableSync();
-    bindCloudSync();
+    renderInfo();
   });
 }
 function renderInfo() {
   const st = window.TripSync?.getStatus?.() || { configured: false, state: "off" };
+  const live = st.enabled && (st.state === "live" || st.state === "offline");
+  const syncHelp = live
+    ? "Änderungen werden automatisch synchronisiert. Nach Tab-Schließen Passphrase erneut eingeben und verbinden."
+    : "<b>Raphael:</b> Raum erstellen → Trip-ID teilen. <b>Beide:</b> Trip-ID + gleiche Passphrase → Verbinden. Neues Handy lädt den Cloud-Stand, ohne ihn zu überschreiben.";
   $("v-info").innerHTML = `<div class="page">
-    <div class="card" id="cloud-card"><h3>☁️ Cloud-Sync (Firebase)</h3>
+    <div class="card" id="cloud-card"><h3>☁️ Cloud-Sync</h3>
       <p class="mut" id="sync-status-line">${esc(syncStatusLabel(st))}</p>
-      <p class="mut">Gemeinsame Passphrase verschlüsselt Türcodes &amp; Buchungen. Trip-ID + Passphrase nur unter euch teilen.</p>
+      <p class="mut">${syncHelp}</p>
       <label class="mut">Trip-ID</label>
       <div class="addrow"><input id="sync-trip-id" class="field" type="text" autocomplete="off" placeholder="UUID vom ersten Gerät" value="${esc(window.TripSync?.getTripId?.() || "")}"><button type="button" class="pill" id="bSyncCopy" title="Kopieren">📋</button></div>
-      <div class="actions"><button type="button" class="pill" id="bSyncCreate">🆕 Raum erstellen</button></div>
-      <label class="mut">Sync-Passphrase</label>
-      <input id="sync-pass" class="field" type="password" autocomplete="current-password" placeholder="mind. 6 Zeichen – gleich auf beiden Handys">
+      ${live ? "" : `<div class="actions"><button type="button" class="pill" id="bSyncCreate">🆕 Raum erstellen (Raphael)</button></div>`}
+      <label class="mut">Passphrase</label>
+      <input id="sync-pass" class="field" type="password" autocomplete="current-password" placeholder="gemeinsam gewählt, mind. 6 Zeichen">
       <div class="actions">
-        <button type="button" class="pill primary" id="bSyncOn">Sync aktivieren</button>
-        <button type="button" class="pill" id="bSyncResume">Fortsetzen</button>
-      </div>
-      <div class="actions">
-        <button type="button" class="pill" id="bSyncPush">⬆️ Hochladen</button>
-        <button type="button" class="pill" id="bSyncPull">⬇️ Laden</button>
-        <button type="button" class="pill" id="bSyncOff">Sync aus</button>
+        <button type="button" class="pill primary" id="bSyncConnect">${live ? "Erneut verbinden" : "Verbinden"}</button>
+        ${live ? `<button type="button" class="pill" id="bSyncOff">Trennen</button>` : ""}
       </div></div>
     <div class="card"><h3>💾 Backup (Datei)</h3>
       <p class="mut">Fallback ohne Internet oder vor dem ersten Sync. Schnellzugriff: <b>💾 / 📂</b> oben.</p>
