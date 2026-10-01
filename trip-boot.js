@@ -21,14 +21,23 @@ function paintSyncUI(st) {
   if (idIn && !idIn.dataset.touched) idIn.value = st.tripId || TripSync.getTripId() || "";
 }
 
-TripSync.init({
-  getState: () => window.__tripApi.getState(),
-  getWho: () => window.__tripApi.getWho(),
-  onRemote: data => window.__tripApi.setState(data),
-  onStatus: st => {
-    paintSyncUI(st);
-    window.__tripApi.onSyncStatus?.(st);
+function boot() {
+  const api = window.__tripApi;
+  if (!api) {
+    console.warn("trip-boot: __tripApi noch nicht bereit");
+    return;
   }
-});
+  TripSync.init({
+    getState: () => api.getState(),
+    getWho: () => api.getWho(),
+    onRemote: data => api.setState(data),
+    onStatus: st => {
+      paintSyncUI(st);
+      api.onSyncStatus?.(st);
+    }
+  });
+  paintSyncUI(TripSync.getStatus());
+}
 
-paintSyncUI(TripSync.getStatus());
+if (window.__tripApi) boot();
+else addEventListener("DOMContentLoaded", boot);

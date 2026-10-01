@@ -669,22 +669,22 @@ function syncStatusLabel(st) {
 function bindCloudSync() {
   const idIn = $("sync-trip-id");
   const passIn = $("sync-pass");
-  const st = window.TripSync?.getStatus?.() || {};
+  const on = (id, fn) => { const el = $(id); if (el) el.onclick = fn; };
   if (idIn) {
     idIn.oninput = () => { idIn.dataset.touched = "1"; };
     if (!idIn.value) idIn.value = window.TripSync?.getTripId?.() || "";
   }
-  $("bSyncCreate")?.onclick = () => {
+  on("bSyncCreate", () => {
     const id = window.TripSync.createTripId();
     if (idIn) { idIn.value = id; idIn.dataset.touched = "1"; }
     toast("Neue Trip-ID – an Jasmin schicken");
-  };
-  $("bSyncCopy")?.onclick = async () => {
+  });
+  on("bSyncCopy", async () => {
     const id = idIn?.value?.trim() || window.TripSync.getTripId();
     if (!id) { toast("Keine Trip-ID"); return; }
     try { await navigator.clipboard.writeText(id); toast("Trip-ID kopiert"); }
     catch { prompt("Trip-ID kopieren:", id); }
-  };
+  });
   const activate = async () => {
     if (!window.TripSync?.isFirebaseConfigured?.()) {
       alert("Firebase fehlt: firebase-config.js anlegen (siehe firebase-config.example.js und FIREBASE_SETUP.md).");
@@ -700,24 +700,24 @@ function bindCloudSync() {
       bindCloudSync();
     } catch (e) { alert(e.message || e); bindCloudSync(); }
   };
-  $("bSyncOn")?.onclick = () => activate();
-  $("bSyncResume")?.onclick = () => activate();
-  $("bSyncPush")?.onclick = async () => {
+  on("bSyncOn", () => activate());
+  on("bSyncResume", () => activate());
+  on("bSyncPush", async () => {
     try { await window.TripSync.pushNow(); toast("Hochgeladen"); } catch (e) { alert(e.message || e); }
     bindCloudSync();
-  };
-  $("bSyncPull")?.onclick = async () => {
+  });
+  on("bSyncPull", async () => {
     try {
       if (await window.TripSync.pullNow()) toast("Vom Server geladen");
       else toast("Noch kein Cloud-Stand");
     } catch (e) { alert(e.message || e); }
     bindCloudSync();
-  };
-  $("bSyncOff")?.onclick = () => {
+  });
+  on("bSyncOff", () => {
     if (!confirm("Cloud-Sync auf diesem Gerät deaktivieren? (Daten bleiben lokal und in der Cloud.)")) return;
     window.TripSync.disableSync();
     bindCloudSync();
-  };
+  });
 }
 function renderInfo() {
   const st = window.TripSync?.getStatus?.() || { configured: false, state: "off" };
