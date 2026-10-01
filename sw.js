@@ -1,4 +1,4 @@
-const CACHE = "silvester-v1";
+const CACHE = "silvester-v2";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon.png"];
 
 self.addEventListener("install", e => {

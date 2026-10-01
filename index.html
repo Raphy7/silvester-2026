@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<script>(function(){var k="trip-theme",t=localStorage.getItem(k);if(!t&&matchMedia("(prefers-color-scheme:light)").matches)t="light";document.documentElement.dataset.theme=t||"dark";})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b1624">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,22 +14,24 @@
 <link rel="apple-touch-icon" href="icon.png">
 <title>Silvester 26/27 · Tallinn & Helsinki</title>
 <style>
-:root{--bg:#0b1624;--card:#15263a;--card2:#1d334d;--acc:#ffc857;--acc2:#ff6b9a;--txt:#eaf1f8;--mut:#8ea3ba;--ok:#5dd39e;--r:16px;--sb:env(safe-area-inset-bottom)}
+:root,[data-theme="dark"]{--bg:#0b1624;--card:#15263a;--card2:#1d334d;--acc:#ffc857;--acc2:#ff6b9a;--txt:#eaf1f8;--mut:#8ea3ba;--ok:#5dd39e;--surface:#ffffff14;--surface2:#ffffff16;--border:#ffffff22;--divider:#ffffff10;--check-border:#ffffff40;--tab-active-sub:#443;--cat-sel-bg:#ffc85722;--badge-nx-bg:#ffc85733;--item-next-ring:#ffc85766;--nowbar-bg:linear-gradient(135deg,#ff6b9a30,#ffc85720);--nowbar-border:#ff6b9a55;--shadow-nav:0 12px 30px -8px #000c;--r:16px;--sb:env(safe-area-inset-bottom)}
+[data-theme="light"]{--bg:#eef1f6;--card:#fff;--card2:#e4eaf2;--acc:#b8860b;--acc2:#d63d6f;--txt:#152030;--mut:#5c6b7a;--ok:#1a9d6c;--surface:#0000000a;--surface2:#00000012;--border:#00000018;--divider:#0000000f;--check-border:#00000035;--tab-active-sub:#5a4a20;--cat-sel-bg:#ffc85740;--badge-nx-bg:#ffc85755;--item-next-ring:#b8860b66;--nowbar-bg:linear-gradient(135deg,#ff6b9a18,#ffc85714);--nowbar-border:#ff6b9a44;--shadow-nav:0 12px 30px -8px #00000026;color-scheme:light}
+[data-theme="dark"]{color-scheme:dark}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;transition:background-color .2s,color .2s}
 body{padding-bottom:calc(90px + var(--sb));overscroll-behavior-y:none}
 button{font:inherit;color:inherit;cursor:pointer}
 a{color:var(--acc)}
 .mut{color:var(--mut);font-size:.8rem}
 
-header{padding:calc(14px + env(safe-area-inset-top)) 16px 14px;background:radial-gradient(120% 140% at 0% 0%,#2a4f7a 0%,transparent 60%),radial-gradient(100% 120% at 100% 0%,#5a2a55 0%,transparent 55%),var(--bg)}
+header{padding:calc(14px + env(safe-area-inset-top)) 16px 14px;background:var(--bg)}
 .brand{display:flex;align-items:center;gap:10px;max-width:1300px;margin:auto}
 .brand h1{flex:1;margin:0;font-size:1.2rem;line-height:1.2}
 .brand h1 small{display:block;font-size:.75rem;color:var(--mut);font-weight:400}
-.icon-btn{border:0;background:#ffffff14;border-radius:50%;width:44px;height:44px;font-size:1.2rem;flex:0 0 auto}
+.icon-btn{border:0;background:var(--surface);border-radius:50%;width:44px;height:44px;font-size:1.2rem;flex:0 0 auto}
 #countdown{max-width:520px;margin:12px auto 0;cursor:pointer}
 .cd{display:flex;gap:8px}
-.cd div{flex:1;background:#ffffff10;border-radius:12px;padding:8px 2px;text-align:center}
+.cd div{flex:1;background:var(--surface);border-radius:12px;padding:8px 2px;text-align:center}
 .cd b{display:block;font-size:1.45rem;color:var(--acc);font-variant-numeric:tabular-nums}
 .cd span{font-size:.65rem;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
 .cdlabel{font-size:.8rem;color:var(--mut);margin-top:6px;text-align:center}
@@ -41,10 +44,10 @@ header{padding:calc(14px + env(safe-area-inset-top)) 16px 14px;background:radial
 #tabs button{flex:0 0 auto;border:0;border-radius:12px;padding:6px 12px;background:var(--card);line-height:1.15;min-width:68px;min-height:48px;font-weight:600;position:relative}
 #tabs button small{display:block;font-size:.68rem;color:var(--mut);font-weight:400}
 #tabs button.active{background:var(--acc);color:#111}
-#tabs button.active small{color:#443}
+#tabs button.active small{color:var(--tab-active-sub)}
 #tabs button.today::after{content:"";position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--acc2)}
 
-#nowbar{margin:0 16px 12px;padding:12px 14px;border-radius:var(--r);background:linear-gradient(135deg,#ff6b9a30,#ffc85720);border:1px solid #ff6b9a55;font-size:.9rem;cursor:pointer;max-width:1268px}
+#nowbar{margin:0 16px 12px;padding:12px 14px;border-radius:var(--r);background:var(--nowbar-bg);border:1px solid var(--nowbar-border);font-size:.9rem;cursor:pointer;max-width:1268px}
 #nowbar b{color:var(--acc2)}
 @media(min-width:1300px){#nowbar{margin:0 auto 12px}}
 
@@ -60,10 +63,10 @@ header{padding:calc(14px + env(safe-area-inset-top)) 16px 14px;background:radial
 .daycard h2{margin:0 0 6px;font-size:1.15rem}
 body.editing .daycard h2{outline:1px dashed var(--acc);border-radius:6px;padding:2px 6px}
 .meta{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.82rem;color:var(--mut)}
-.progress{height:6px;background:#ffffff14;border-radius:3px;margin:12px 0 4px;overflow:hidden}
+.progress{height:6px;background:var(--surface);border-radius:3px;margin:12px 0 4px;overflow:hidden}
 .progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .4s}
 .actions{display:flex;gap:8px;margin-top:12px}
-.pill{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:12px;padding:10px;background:#ffffff14;color:var(--txt);text-decoration:none;font-size:.9rem;min-height:44px}
+.pill{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:12px;padding:10px;background:var(--surface);color:var(--txt);text-decoration:none;font-size:.9rem;min-height:44px}
 .pill.primary{background:var(--acc);color:#111;font-weight:600}
 .pill:active{transform:scale(.97)}
 
@@ -74,18 +77,18 @@ body.editing .daycard h2{outline:1px dashed var(--acc);border-radius:6px;padding
 .item.done::before{background:var(--ok);border-color:var(--ok)}
 .item.now{box-shadow:0 0 0 2px var(--acc2),0 8px 24px -8px var(--acc2)}
 .item.now::before{background:var(--acc2);border-color:var(--acc2);animation:pulse 1.6s infinite}
-.item.next{box-shadow:0 0 0 1px #ffc85766}
+.item.next{box-shadow:0 0 0 1px var(--item-next-ring)}
 @keyframes pulse{from{box-shadow:0 0 0 0 #ff6b9a99}to{box-shadow:0 0 0 12px #ff6b9a00}}
 .row{display:flex;align-items:center;gap:12px;padding:10px 12px;min-height:56px}
 .item.loc .row{cursor:pointer}
-.item.loc .row:active{background:#ffffff08;border-radius:14px}
-.check{appearance:none;-webkit-appearance:none;flex:0 0 28px;height:28px;border-radius:50%;border:2px solid #ffffff40;display:grid;place-items:center;margin:0;cursor:pointer;transition:.15s}
+.item.loc .row:active{background:var(--surface);border-radius:14px}
+.check{appearance:none;-webkit-appearance:none;flex:0 0 28px;height:28px;border-radius:50%;border:2px solid var(--check-border);display:grid;place-items:center;margin:0;cursor:pointer;transition:.15s}
 .check:checked{background:var(--ok);border-color:var(--ok)}
 .check:checked::after{content:"✓";color:var(--bg);font-weight:800;font-size:.95rem}
 .body{flex:1;min-width:0}
 .time{display:block;font-variant-numeric:tabular-nums;color:var(--acc);font-size:.78rem;font-weight:600}
 .badge{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:8px;background:var(--acc2);color:#fff;font-size:.65rem;letter-spacing:.04em}
-.badge.nx{background:#ffc85733;color:var(--acc)}
+.badge.nx{background:var(--badge-nx-bg);color:var(--acc)}
 .title{display:block;font-weight:500}
 .item.done .title{text-decoration:line-through;opacity:.5}
 .note{display:block;color:var(--mut);font-size:.8rem;margin-top:2px;overflow-wrap:anywhere}
@@ -99,53 +102,54 @@ body.editing .daycard h2{outline:1px dashed var(--acc);border-radius:6px;padding
 
 .item.edit{display:grid;grid-template-columns:90px 1fr;gap:6px;padding:10px}
 .item.edit .full{grid-column:1/-1}
-.field{width:100%;background:var(--bg);border:1px solid #ffffff22;color:var(--txt);border-radius:10px;padding:9px 11px;font:inherit;font-size:16px;min-height:44px}
+.field{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:9px 11px;font:inherit;font-size:16px;min-height:44px}
 .field:focus{outline:none;border-color:var(--acc)}
 textarea.field{resize:vertical;min-height:70px;margin-top:6px}
 .e-btns{grid-column:1/-1;display:flex;gap:6px;justify-content:flex-end}
 .e-btns button{border:0;border-radius:10px;background:var(--bg);min-width:44px;min-height:40px}
 .item.add{display:flex;justify-content:center;align-items:center;min-height:52px;color:var(--acc);border:1px dashed var(--acc);background:transparent;cursor:pointer}
 
-.view{display:none}.view.active{display:block;animation:fade .25s}
+.view{display:none;pointer-events:none}.view.active{display:block;pointer-events:auto;animation:fade .25s}
 .page{padding:12px 16px;max-width:680px;margin:auto}
 .card{background:var(--card);border-radius:var(--r);padding:16px;margin-bottom:14px}
 .card h3{margin:0 0 12px;font-size:1rem}
-.hero{text-align:center;background:linear-gradient(135deg,#2a4f7a,#5a2a55)}
+.hero{text-align:center;background:linear-gradient(135deg,var(--card2),var(--card))}
 .big{font-size:2.3rem;font-weight:700;margin:2px 0;font-variant-numeric:tabular-nums}
 .form{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .form .full{grid-column:1/-1}
 .cats{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
-.cat{border:1px solid #ffffff1a;background:var(--bg);border-radius:12px;padding:6px 0;font-size:1.25rem;min-height:52px}
+.cat{border:1px solid var(--border);background:var(--bg);border-radius:12px;padding:6px 0;font-size:1.25rem;min-height:52px}
 .cat small{display:block;font-size:.58rem;color:var(--mut)}
-.cat.sel{border-color:var(--acc);background:#ffc85722}
+.cat.sel{border-color:var(--acc);background:var(--cat-sel-bg)}
 .plain{list-style:none;margin:0;padding:0}
-.plain li{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #ffffff10;min-height:52px}
+.plain li{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--divider);min-height:52px}
 .plain li:last-child{border-bottom:0}
 .plain label{flex:1;display:flex;align-items:center;gap:12px;cursor:pointer}
 .plain li.done label span{text-decoration:line-through;opacity:.5}
 .x{border:0;background:none;color:var(--mut);width:40px;height:40px;border-radius:50%;flex:0 0 auto}
-.x:active{background:#ffffff14}
+.x:active{background:var(--surface)}
 .grow{flex:1;min-width:0}
 .amt{font-weight:600;font-variant-numeric:tabular-nums}
 .pos{color:var(--ok)}.neg{color:var(--acc2)}
 .cbar{display:flex;align-items:center;gap:8px;font-size:.8rem;margin-top:6px;text-align:left}
 .cbar i{height:8px;border-radius:4px;background:linear-gradient(90deg,var(--acc),var(--acc2));display:block}
-.addrow{display:flex;gap:8px;margin-bottom:6px}
+.addrow{display:flex;gap:8px;margin-bottom:6px;align-items:stretch}
+.addrow .field{flex:1;min-width:0;width:auto}
 .addrow .pill{flex:0 0 56px}
 .phr{width:100%;border-collapse:collapse;font-size:.88rem}
-.phr td,.phr th{padding:8px 4px;border-bottom:1px solid #ffffff10;text-align:left;vertical-align:top}
+.phr td,.phr th{padding:8px 4px;border-bottom:1px solid var(--divider);text-align:left;vertical-align:top}
 .phr th{color:var(--mut);font-weight:500;font-size:.75rem}
 .facts{margin:0;padding:0;list-style:none}
-.facts li{padding:7px 0;border-bottom:1px solid #ffffff10;font-size:.9rem}
+.facts li{padding:7px 0;border-bottom:1px solid var(--divider);font-size:.9rem}
 .facts li:last-child{border-bottom:0}
 .bk{margin-bottom:14px;position:relative}
 .bk .field:first-child{font-weight:600;padding-right:48px}
 .bk .x{position:absolute;right:2px;top:2px}
 
-#bottom{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + var(--sb));display:flex;gap:2px;padding:6px;background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid #ffffff18;border-radius:24px;z-index:20;box-shadow:0 12px 30px -8px #000c}
+#bottom{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + var(--sb));display:flex;gap:2px;padding:6px;background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:24px;z-index:20;box-shadow:var(--shadow-nav)}
 #bottom button{border:0;background:none;border-radius:18px;padding:6px 0;display:flex;flex-direction:column;align-items:center;font-size:1.25rem;color:var(--mut);width:76px;transition:.2s}
 #bottom button span{font-size:.68rem;margin-top:1px}
-#bottom button.active{background:#ffffff16;color:var(--txt)}
+#bottom button.active{background:var(--surface2);color:var(--txt)}
 #bottom button.active span{color:var(--acc)}
 
 #fw{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50;display:none}
@@ -157,7 +161,10 @@ textarea.field{resize:vertical;min-height:70px;margin-top:6px}
 <header>
   <div class="brand">
     <h1>🎆 Silvester 26/27<small>Raphael &amp; Jasmin · 🇪🇪 Tallinn · 🇫🇮 Helsinki</small></h1>
-    <button class="icon-btn" id="bFw" aria-label="Feuerwerk">🎇</button>
+    <button type="button" class="icon-btn" id="bTheme" aria-label="Darstellung wechseln" title="Light Mode">☀️</button>
+    <button type="button" class="icon-btn" id="bExpHdr" aria-label="Daten exportieren" title="Export">💾</button>
+    <button type="button" class="icon-btn" id="bImpHdr" aria-label="Daten importieren" title="Import">📂</button>
+    <button type="button" class="icon-btn" id="bFw" aria-label="Feuerwerk">🎇</button>
   </div>
   <div id="countdown"></div>
 </header>
@@ -185,6 +192,7 @@ textarea.field{resize:vertical;min-height:70px;margin-top:6px}
 </nav>
 <canvas id="fw"></canvas>
 <div id="toast"></div>
+<input type="file" id="file" accept=".json,application/json" hidden>
 
 <script>
 const T = ", Tallinn", H = ", Helsinki";
@@ -300,7 +308,19 @@ const fmtMin = m => m < 60 ? `${m} Min.` : `${Math.floor(m / 60)} h ${m % 60 ? m
 const toMin = s => { const m = /(\d{1,2}):(\d{2})/.exec(s || ""); if (!m) return null; const v = +m[1] * 60 + +m[2]; return v < 300 ? v + 1440 : v; };
 
 /* ---------- State ---------- */
-const KEY = "trip-v2", ME_KEY = "trip-me";
+const KEY = "trip-v2", ME_KEY = "trip-me", THEME_KEY = "trip-theme";
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  localStorage.setItem(THEME_KEY, t);
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.content = t === "light" ? "#eef1f6" : "#0b1624";
+  const btn = $("bTheme");
+  if (!btn) return;
+  const light = t === "light";
+  btn.textContent = light ? "🌙" : "☀️";
+  btn.title = light ? "Dark Mode" : "Light Mode";
+  btn.setAttribute("aria-label", light ? "Dark Mode aktivieren" : "Light Mode aktivieren");
+}
 function normalize(s) {
   if (Array.isArray(s)) s = {days: s};
   const d = structuredClone(DEFAULTS);
@@ -342,7 +362,7 @@ function wxText(d) {
 
 function renderTabs() {
   const today = tNow().date, tabs = $("tabs");
-  tabs.innerHTML = S.days.map((x, i) => `<button class="${i === cur ? "active" : ""} ${x.date === today ? "today" : ""}" data-i="${i}"><small>${wd(x.date)} ${x.icon || ""}</small>${dm(x.date)}</button>`).join("");
+  tabs.innerHTML = S.days.map((x, i) => `<button class="${i === cur ? "active" : ""} ${x.date === today ? "today" : ""}" data-i="${i}"><small>${wd(x.date)}</small>${dm(x.date)}</button>`).join("");
   tabs.querySelectorAll("button").forEach(b => b.onclick = () => showDay(+b.dataset.i, +b.dataset.i > cur ? "l" : "r"));
   const a = tabs.children[cur];
   tabs.scrollTo({left: a.offsetLeft - tabs.clientWidth / 2 + a.clientWidth / 2, behavior: "smooth"});
@@ -492,7 +512,14 @@ $("daycol").addEventListener("touchend", e => {
 
 /* ---------- Kasse ---------- */
 let selCat = CATS[0][0];
+let moneyDraft = {a: "", t: ""};
+function captureMoneyDraft() {
+  const a = $("mA"), t = $("mT");
+  if (a) moneyDraft.a = a.value;
+  if (t) moneyDraft.t = t.value;
+}
 function renderMoney() {
+  captureMoneyDraft();
   const P = S.people, E = S.expenses;
   const total = E.reduce((a, e) => a + e.a, 0), share = total / P.length;
   const paid = P.map((_, i) => E.filter(e => e.p === i).reduce((a, e) => a + e.a, 0));
@@ -517,12 +544,12 @@ function renderMoney() {
     <div class="card"><h3>➕ Neue Ausgabe</h3>
       <p class="mut" style="margin:0 0 10px">Wer dieses Handy nutzt:</p>
       <div class="actions" style="margin-bottom:10px">${P.map((n, i) => `<button type="button" class="pill ${localStorage.getItem(ME_KEY) === String(i) ? "primary" : ""}" data-me="${i}">${esc(n)}</button>`).join("")}</div>
-      <div class="form">
-      <input id="mA" class="field" inputmode="decimal" placeholder="Betrag in €">
+      <form class="form" id="moneyForm">
+      <input id="mA" class="field" type="text" inputmode="decimal" autocomplete="off" placeholder="Betrag in €" value="${esc(moneyDraft.a)}">
       <select id="mP" class="field">${P.map((n, i) => `<option value="${i}">${esc(n)} zahlt</option>`).join("")}</select>
-      <input id="mT" class="field full" placeholder="Wofür? z. B. Rataskaevu 16" enterkeyhint="done">
-      <div class="cats full">${CATS.map(c => `<button class="cat ${c[0] === selCat ? "sel" : ""}" data-c="${c[0]}">${c[0]}<small>${c[1]}</small></button>`).join("")}</div>
-      <button id="mAdd" class="pill primary full">Hinzufügen</button></div></div>
+      <input id="mT" class="field full" type="text" autocomplete="off" placeholder="Wofür? z. B. Rataskaevu 16" enterkeyhint="done" value="${esc(moneyDraft.t)}">
+      <div class="cats full">${CATS.map(c => `<button type="button" class="cat ${c[0] === selCat ? "sel" : ""}" data-c="${c[0]}">${c[0]}<small>${c[1]}</small></button>`).join("")}</div>
+      <button type="submit" id="mAdd" class="pill primary full">Hinzufügen</button></form></div>
     <div class="card"><h3>⚖️ Ausgleich</h3><ul class="plain">
       ${P.map((n, i) => `<li><span class="grow">${esc(n)} <span class="mut">hat ${eur(paid[i])} bezahlt</span></span><span class="amt ${bal[i] >= 0 ? "pos" : "neg"}">${bal[i] >= 0 ? "+" : ""}${eur(bal[i] || 0)}</span></li>`).join("")}
       ${tx.length ? tx.map(([a, b, m]) => `<li><span class="grow">💸 <b>${esc(P[a])}</b> → <b>${esc(P[b])}</b></span><span class="amt">${eur(m)}</span></li>`).join("") : `<li class="mut">✨ Alles ausgeglichen</li>`}
@@ -531,16 +558,16 @@ function renderMoney() {
       ${E.length ? E.map((e, i) => [e, i]).reverse().map(([e, i]) => `<li><span style="font-size:1.3rem">${e.c}</span><span class="grow">${esc(e.t || "Ausgabe")}<br><span class="mut">${esc(P[e.p] ?? "?")} · ${dm(e.d)}</span></span><span class="amt">${eur(e.a)}</span><button class="x" data-del="${i}" aria-label="Löschen">✕</button></li>`).join("") : `<li class="mut">Noch keine Ausgaben</li>`}
     </ul></div>
     <div class="card"><h3>👥 Reisende</h3><input id="mPeople" class="field" value="${esc(P.join(", "))}">
-      <p class="mut">Raphael &amp; Jasmin · Kosten werden zu gleichen Teilen geteilt · gleichen Stand auf beiden Handys per <b>Infos → Export/Import</b></p></div>
+      <p class="mut">Raphael &amp; Jasmin · Kosten werden zu gleichen Teilen geteilt · gleichen Stand per <b>💾 / 📂</b> oben in der Leiste</p></div>
   </div>`;
 
-  document.querySelectorAll(".cat").forEach(b => b.onclick = () => { selCat = b.dataset.c; document.querySelectorAll(".cat").forEach(x => x.classList.toggle("sel", x === b)); buzz(); });
+  document.querySelectorAll("#v-money .cat").forEach(b => b.onclick = () => { selCat = b.dataset.c; document.querySelectorAll("#v-money .cat").forEach(x => x.classList.toggle("sel", x === b)); buzz(); });
   const me = localStorage.getItem(ME_KEY);
   if (me !== null && +me < P.length) $("mP").value = me;
-  document.querySelectorAll("[data-me]").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#v-money [data-me]").forEach(b => b.onclick = () => {
     localStorage.setItem(ME_KEY, b.dataset.me);
     $("mP").value = b.dataset.me;
-    document.querySelectorAll("[data-me]").forEach(x => x.classList.toggle("primary", x === b));
+    document.querySelectorAll("#v-money [data-me]").forEach(x => x.classList.toggle("primary", x === b));
     buzz();
     toast(`${P[+b.dataset.me]} auf diesem Gerät`);
   });
@@ -548,62 +575,99 @@ function renderMoney() {
     const a = parseFloat($("mA").value.replace(",", "."));
     if (!(a > 0)) { toast("Bitte Betrag eingeben"); $("mA").focus(); return; }
     S.expenses.push({a: Math.round(a * 100) / 100, t: $("mT").value.trim(), p: +$("mP").value, c: selCat, d: tNow().date});
+    moneyDraft = {a: "", t: ""};
     save(); buzz(); renderMoney(); toast(`${eur(a)} gespeichert`);
   };
-  $("mAdd").onclick = add;
-  $("mT").onkeydown = e => e.key === "Enter" && add();
-  document.querySelectorAll("[data-del]").forEach(b => b.onclick = () => {
+  $("moneyForm").onsubmit = e => { e.preventDefault(); add(); };
+  $("mA").oninput = e => { moneyDraft.a = e.target.value; };
+  $("mT").oninput = e => { moneyDraft.t = e.target.value; };
+  document.querySelectorAll("#v-money [data-del]").forEach(b => b.onclick = () => {
     if (!confirm("Ausgabe löschen?")) return;
     S.expenses.splice(+b.dataset.del, 1); save(); renderMoney();
   });
   $("mPeople").onchange = e => {
     const names = e.target.value.split(",").map(s => s.trim()).filter(Boolean);
-    if (names.length) { S.people = names; save(); renderMoney(); }
+    if (names.length && names.join(", ") !== S.people.join(", ")) { S.people = names; save(); renderMoney(); }
   };
 }
 
 /* ---------- Packliste ---------- */
+let packDraft = "";
+function capturePackDraft() {
+  const p = $("pNew");
+  if (p) packDraft = p.value;
+}
+function updatePackHero() {
+  const L = S.packing, done = L.filter(x => x[1]).length;
+  const hero = document.querySelector("#v-pack .hero");
+  if (!hero) return;
+  hero.querySelector(".big").textContent = `${done} / ${L.length}`;
+  hero.querySelector(".progress i").style.width = (L.length ? done / L.length * 100 : 0) + "%";
+  const hint = hero.querySelector(".mut:last-child");
+  if (hint) hint.textContent = done === L.length && L.length ? "🎉 Alles gepackt – ab in den Norden!" : "Im Dezember ist es dort kalt: ca. −1° bis −6°";
+}
 function renderPack() {
+  capturePackDraft();
   const L = S.packing, done = L.filter(x => x[1]).length;
   $("v-pack").innerHTML = `<div class="page">
     <div class="card hero"><span class="mut">Packliste</span><div class="big">${done} / ${L.length}</div>
       <div class="progress"><i style="width:${L.length ? done / L.length * 100 : 0}%"></i></div>
       <span class="mut">${done === L.length && L.length ? "🎉 Alles gepackt – ab in den Norden!" : "Im Dezember ist es dort kalt: ca. −1° bis −6°"}</span></div>
-    <div class="card"><div class="addrow"><input id="pNew" class="field" placeholder="Neuer Gegenstand" enterkeyhint="done"><button id="pAdd" class="pill primary" aria-label="Hinzufügen">＋</button></div>
-      <ul class="plain">${L.map((x, i) => `<li class="${x[1] ? "done" : ""}"><label><input type="checkbox" class="check" data-i="${i}" ${x[1] ? "checked" : ""}><span>${esc(x[0])}</span></label><button class="x" data-del="${i}" aria-label="Löschen">✕</button></li>`).join("")}</ul>
+    <div class="card"><form class="addrow" id="packForm"><input id="pNew" class="field" type="text" autocomplete="off" placeholder="Neuer Gegenstand" enterkeyhint="done" value="${esc(packDraft)}"><button type="submit" id="pAdd" class="pill primary" aria-label="Hinzufügen">＋</button></form>
+      <ul class="plain">${L.map((x, i) => `<li class="${x[1] ? "done" : ""}"><label><input type="checkbox" class="check" data-i="${i}" ${x[1] ? "checked" : ""}><span>${esc(x[0])}</span></label><button type="button" class="x" data-del="${i}" aria-label="Löschen">✕</button></li>`).join("")}</ul>
     </div></div>`;
-  document.querySelectorAll("#v-pack .check").forEach(c => c.onchange = () => { L[+c.dataset.i][1] = c.checked; buzz(); save(); renderPack(); });
-  document.querySelectorAll("#v-pack [data-del]").forEach(b => b.onclick = () => { L.splice(+b.dataset.del, 1); save(); renderPack(); });
-  const add = () => { const v = $("pNew").value.trim(); if (!v) return; L.push([v, false]); save(); renderPack(); $("pNew").focus(); };
-  $("pAdd").onclick = add;
-  $("pNew").onkeydown = e => e.key === "Enter" && add();
+  document.querySelectorAll("#v-pack .check").forEach(c => c.onchange = () => {
+    L[+c.dataset.i][1] = c.checked;
+    c.closest("li").classList.toggle("done", c.checked);
+    buzz(); save(); updatePackHero();
+  });
+  document.querySelectorAll("#v-pack [data-del]").forEach(b => b.onclick = () => { capturePackDraft(); L.splice(+b.dataset.del, 1); save(); renderPack(); });
+  const add = () => {
+    const v = $("pNew").value.trim();
+    if (!v) { toast("Bitte Text eingeben"); $("pNew").focus(); return; }
+    L.push([v, false]); packDraft = ""; save(); renderPack(); $("pNew").focus();
+  };
+  $("packForm").onsubmit = e => { e.preventDefault(); add(); };
+  $("pNew").oninput = e => { packDraft = e.target.value; };
 }
 
 /* ---------- Infos ---------- */
 const PHRASES = [["Hallo","Tere","Moi / Hei"],["Danke","Aitäh","Kiitos"],["Bitte","Palun","Ole hyvä"],["Ja / Nein","Jah / Ei","Kyllä / Ei"],["Entschuldigung","Vabandust","Anteeksi"],["Ein Bier, bitte","Üks õlu, palun","Yksi olut, kiitos"],["Die Rechnung, bitte","Arve, palun","Lasku, kiitos"],["Prost!","Terviseks!","Kippis!"],["Frohes neues Jahr!","Head uut aastat!","Hyvää uutta vuotta!"],["Tschüss","Head aega","Heippa / Moikka"]];
 const FACTS = ["🚨 Notruf: <b>112</b> in beiden Ländern","💶 Euro in Estland & Finnland","🕐 Osteuropäische Zeit: Deutschland <b>+1 h</b>","🔌 Steckdosen Typ C/F – kein Adapter nötig","🌅 Nur ca. 6 Stunden Tageslicht – Sightseeing früh starten","🚕 Tallinn: Bolt-App für Taxis (Bolt ist ein estnisches Startup)","🚋 Helsinki: HSL-App für Tram, Bus & Suomenlinna-Fähre","💧 Leitungswasser ist in beiden Städten trinkbar","🧾 Trinkgeld wird nicht erwartet, ~5–10 % bei gutem Service","🧖 Sauna-Etikette: vorher duschen, im Löyly mit Badesachen"];
-let installEvt = null;
-addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; if ($("bInstall")) $("bInstall").hidden = false; });
+
+function doExport() {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 1)], {type: "application/json"}));
+  a.download = "reiseplan.json";
+  a.click();
+  toast("Export erstellt");
+}
+async function doImportFile(file) {
+  if (!file) return;
+  try {
+    const data = JSON.parse(await file.text());
+    const n = normalize(data);
+    if (!n.days.every(d => d.title && Array.isArray(d.items))) throw 0;
+    S = n; save(); cur = 0; renderAll(); toast("Import erfolgreich ✓");
+  } catch { alert("Ungültige Datei – bitte eine exportierte reiseplan.json wählen."); }
+}
+function bindSyncControls() {
+  $("bExpHdr").onclick = doExport;
+  $("bImpHdr").onclick = () => $("file").click();
+  $("file").onchange = async e => { await doImportFile(e.target.files[0]); e.target.value = ""; };
+}
 
 function renderInfo() {
   $("v-info").innerHTML = `<div class="page">
+    <div class="card"><h3>💾 Daten synchronisieren</h3>
+      <p class="mut">Jedes Handy speichert lokal. Wer etwas ändert, exportiert und schickt <code>reiseplan.json</code> – der andere importiert. So bleiben Plan, Kasse &amp; Packliste gleich. Schnellzugriff: <b>💾 / 📂</b> oben.</p>
+      <div class="actions"><button type="button" class="pill" id="bExp">💾 Export</button><button type="button" class="pill" id="bImp">📂 Import</button><button type="button" class="pill" id="bReset">↺ Reset</button></div></div>
     <div class="card"><h3>🎫 Buchungen & Adressen</h3>
       ${S.bookings.map((b, i) => `<div class="bk"><input class="field" data-k="${i}" value="${esc(b.k)}"><button class="x" data-del="${i}" aria-label="Löschen">✕</button><textarea class="field" data-v="${i}" rows="2">${esc(b.v)}</textarea></div>`).join("")}
       <button class="pill" id="bkAdd" style="width:100%">＋ Eintrag</button></div>
     <div class="card"><h3>💡 Gut zu wissen</h3><ul class="facts">${FACTS.map(f => `<li>${f}</li>`).join("")}</ul></div>
     <div class="card"><h3>🗣️ Mini-Sprachführer</h3><table class="phr"><tr><th>🇩🇪</th><th>🇪🇪 Estnisch</th><th>🇫🇮 Finnisch</th></tr>
       ${PHRASES.map(p => `<tr><td>${p[0]}</td><td>${p[1]}</td><td>${p[2]}</td></tr>`).join("")}</table></div>
-    <div class="card"><h3>📲 Als App installieren</h3>
-      <p class="mut">iPhone: in Safari <b>Teilen → Zum Home-Bildschirm</b>. Android: Menü → <b>App installieren</b>. Der Plan funktioniert danach auch offline (Karten brauchen Internet).</p>
-      <button class="pill primary" id="bInstall" style="width:100%" ${installEvt ? "" : "hidden"}>📲 Jetzt installieren</button></div>
-    <div class="card"><h3>💾 Daten</h3>
-      <p class="mut">Raphael &amp; Jasmin: Jeder Handy speichert lokal. Wer etwas ändert, exportiert <code>reiseplan.json</code> und schickt sie dem anderen – dort Import. So bleibt Plan, Kasse &amp; Packliste gleich.</p>
-      <div class="actions"><button class="pill" id="bExp">💾 Export</button><button class="pill" id="bImp">📂 Import</button><button class="pill" id="bReset">↺ Reset</button></div>
-      <input type="file" id="file" accept=".json,application/json" hidden></div>
-    <div class="card"><h3>🕰️ Zeitreise (Vorschau)</h3>
-      <p class="mut">Simuliere eine Uhrzeit (Tallinn-Zeit), um den Live-Modus und das Silvester-Feuerwerk zu testen.</p>
-      <div class="addrow"><input type="datetime-local" id="simT" class="field" value="2026-12-31T23:59"><button class="pill primary" id="bSim" aria-label="Übernehmen">▶</button></div>
-      ${timeOffset ? `<button class="pill" id="bReal" style="width:100%">⏹ Zurück zur echten Zeit</button>` : ""}</div>
   </div>`;
 
   document.querySelectorAll("[data-k]").forEach(x => x.oninput = () => { S.bookings[+x.dataset.k].k = x.value; save(); });
@@ -614,40 +678,19 @@ function renderInfo() {
   });
   document.querySelectorAll("#v-info [data-del]").forEach(b => b.onclick = () => { if (confirm("Eintrag löschen?")) { S.bookings.splice(+b.dataset.del, 1); save(); renderInfo(); } });
   $("bkAdd").onclick = () => { S.bookings.push({k: "📌 Neu", v: ""}); save(); renderInfo(); };
-  $("bInstall").onclick = async () => { if (!installEvt) return; installEvt.prompt(); await installEvt.userChoice; installEvt = null; $("bInstall").hidden = true; };
-  $("bExp").onclick = () => {
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 1)], {type: "application/json"}));
-    a.download = "reiseplan.json";
-    a.click();
-    toast("Export erstellt");
-  };
+  $("bExp").onclick = doExport;
   $("bImp").onclick = () => $("file").click();
-  $("file").onchange = async e => {
-    try {
-      const data = JSON.parse(await e.target.files[0].text());
-      const n = normalize(data);
-      if (!n.days.every(d => d.title && Array.isArray(d.items))) throw 0;
-      S = n; save(); cur = 0; renderAll(); toast("Import erfolgreich ✓");
-    } catch { alert("Ungültige Datei – bitte eine exportierte reiseplan.json wählen."); }
-    e.target.value = "";
-  };
   $("bReset").onclick = () => {
     if (!confirm("Alles (Plan, Kasse, Packliste, Buchungen) auf den Ausgangszustand zurücksetzen?")) return;
     localStorage.removeItem(KEY); localStorage.removeItem("plan");
     S = normalize({}); cur = 0; renderAll(); toast("Zurückgesetzt");
   };
-  $("bSim").onclick = () => {
-    const v = $("simT").value;
-    if (!v) return;
-    timeOffset = new Date(v + ":00+02:00") - Date.now();
-    fired = false; renderAll(); tick(); toast("Zeitreise aktiv 🕰️");
-  };
-  if ($("bReal")) $("bReal").onclick = () => { timeOffset = 0; renderAll(); tick(); toast("Echtzeit"); };
 }
 
 /* ---------- Navigation ---------- */
-function switchView(v) {
+function switchView(v, force) {
+  const active = document.querySelector("#bottom .active");
+  if (!force && active?.dataset.v === v) return;
   document.querySelectorAll(".view").forEach(x => x.classList.toggle("active", x.id === "v-" + v));
   document.querySelectorAll("#bottom button").forEach(b => b.classList.toggle("active", b.dataset.v === v));
   ({plan: renderPlan, money: renderMoney, pack: renderPack, info: renderInfo})[v]();
@@ -657,7 +700,8 @@ document.querySelectorAll("#bottom button").forEach(b => b.onclick = () => { buz
 function renderAll() {
   const v = document.querySelector("#bottom .active").dataset.v;
   renderPlan();
-  if (v !== "plan") switchView(v);
+  if (v === "plan") return;
+  ({money: renderMoney, pack: renderPack, info: renderInfo})[v]();
 }
 mobile.onchange = () => renderPlan();
 
@@ -740,6 +784,9 @@ async function loadWeather() {
 const hashIdx = S.days.findIndex(d => "#" + d.id === location.hash);
 const loc0 = locate();
 cur = hashIdx >= 0 ? hashIdx : loc0 ? loc0.di : 0;
+bindSyncControls();
+applyTheme(document.documentElement.dataset.theme || "dark");
+$("bTheme").onclick = () => { applyTheme(document.documentElement.dataset.theme === "light" ? "dark" : "light"); buzz(); };
 showDay(cur);
 tick();
 setInterval(tick, 1000);
