@@ -146,8 +146,8 @@ textarea.field{resize:vertical;min-height:70px;margin-top:6px}
 .bk .field:first-child{font-weight:600;padding-right:48px}
 .bk .x{position:absolute;right:2px;top:2px}
 
-#bottom{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + var(--sb));display:flex;gap:2px;padding:6px;background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:24px;z-index:20;box-shadow:var(--shadow-nav)}
-#bottom button{border:0;background:none;border-radius:18px;padding:6px 0;display:flex;flex-direction:column;align-items:center;font-size:1.25rem;color:var(--mut);width:76px;transition:.2s}
+#bottom{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + var(--sb));display:flex;align-items:center;gap:2px;padding:6px;background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:24px;z-index:20;box-shadow:var(--shadow-nav)}
+#bottom button{border:0;background:none;border-radius:18px;padding:6px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.25rem;color:var(--mut);width:76px;min-height:52px;max-height:52px;flex:0 0 auto;transition:.2s}
 #bottom button span{font-size:.68rem;margin-top:1px}
 #bottom button.active{background:var(--surface2);color:var(--txt)}
 #bottom button.active span{color:var(--acc)}
@@ -185,10 +185,10 @@ textarea.field{resize:vertical;min-height:70px;margin-top:6px}
 <section id="v-info" class="view"></section>
 
 <nav id="bottom">
-  <button data-v="plan" class="active">📅<span>Plan</span></button>
-  <button data-v="money">💶<span>Kasse</span></button>
-  <button data-v="pack">🎒<span>Packen</span></button>
-  <button data-v="info">ℹ️<span>Infos</span></button>
+  <button type="button" data-tab="plan" class="active">📅<span>Plan</span></button>
+  <button type="button" data-tab="money">💶<span>Kasse</span></button>
+  <button type="button" data-tab="pack">🎒<span>Packen</span></button>
+  <button type="button" data-tab="info">ℹ️<span>Infos</span></button>
 </nav>
 <canvas id="fw"></canvas>
 <div id="toast"></div>
@@ -732,17 +732,17 @@ function renderInfo() {
       <p class="mut">Fallback ohne Internet oder vor dem ersten Sync. Schnellzugriff: <b>💾 / 📂</b> oben.</p>
       <div class="actions"><button type="button" class="pill" id="bExp">💾 Export</button><button type="button" class="pill" id="bImp">📂 Import</button><button type="button" class="pill" id="bReset">↺ Reset</button></div></div>
     <div class="card"><h3>🎫 Buchungen & Adressen</h3>
-      ${S.bookings.map((b, i) => `<div class="bk"><input class="field" data-k="${i}" value="${esc(b.k)}"><button class="x" data-del="${i}" aria-label="Löschen">✕</button><textarea class="field" data-v="${i}" rows="2">${esc(b.v)}</textarea></div>`).join("")}
+      ${S.bookings.map((b, i) => `<div class="bk"><input class="field" data-bk="${i}" value="${esc(b.k)}"><button type="button" class="x" data-del="${i}" aria-label="Löschen">✕</button><textarea class="field" data-bv="${i}" rows="2">${esc(b.v)}</textarea></div>`).join("")}
       <button class="pill" id="bkAdd" style="width:100%">＋ Eintrag</button></div>
     <div class="card"><h3>💡 Gut zu wissen</h3><ul class="facts">${FACTS.map(f => `<li>${f}</li>`).join("")}</ul></div>
     <div class="card"><h3>🗣️ Mini-Sprachführer</h3><table class="phr"><tr><th>🇩🇪</th><th>🇪🇪 Estnisch</th><th>🇫🇮 Finnisch</th></tr>
       ${PHRASES.map(p => `<tr><td>${p[0]}</td><td>${p[1]}</td><td>${p[2]}</td></tr>`).join("")}</table></div>
   </div>`;
 
-  document.querySelectorAll("[data-k]").forEach(x => x.oninput = () => { S.bookings[+x.dataset.k].k = x.value; save(); });
-  document.querySelectorAll("[data-v]").forEach(x => {
+  document.querySelectorAll("#v-info [data-bk]").forEach(x => x.oninput = () => { S.bookings[+x.dataset.bk].k = x.value; save(); });
+  document.querySelectorAll("#v-info textarea[data-bv]").forEach(x => {
     const fit = () => { x.style.height = "auto"; x.style.height = x.scrollHeight + 2 + "px"; };
-    x.oninput = () => { S.bookings[+x.dataset.v].v = x.value; save(); fit(); };
+    x.oninput = () => { S.bookings[+x.dataset.bv].v = x.value; save(); fit(); };
     requestAnimationFrame(fit);
   });
   document.querySelectorAll("#v-info [data-del]").forEach(b => b.onclick = () => { if (confirm("Eintrag löschen?")) { S.bookings.splice(+b.dataset.del, 1); save(); renderInfo(); } });
@@ -760,15 +760,15 @@ function renderInfo() {
 /* ---------- Navigation ---------- */
 function switchView(v, force) {
   const active = document.querySelector("#bottom .active");
-  if (!force && active?.dataset.v === v) return;
+  if (!force && active?.dataset.tab === v) return;
   document.querySelectorAll(".view").forEach(x => x.classList.toggle("active", x.id === "v-" + v));
-  document.querySelectorAll("#bottom button").forEach(b => b.classList.toggle("active", b.dataset.v === v));
+  document.querySelectorAll("#bottom button").forEach(b => b.classList.toggle("active", b.dataset.tab === v));
   ({plan: renderPlan, money: renderMoney, pack: renderPack, info: renderInfo})[v]();
   scrollTo({top: 0});
 }
-document.querySelectorAll("#bottom button").forEach(b => b.onclick = () => { buzz(); switchView(b.dataset.v); });
+document.querySelectorAll("#bottom button").forEach(b => b.onclick = () => { buzz(); switchView(b.dataset.tab); });
 function renderAll() {
-  const v = document.querySelector("#bottom .active").dataset.v;
+  const v = document.querySelector("#bottom .active").dataset.tab;
   renderPlan();
   if (v === "plan") return;
   ({money: renderMoney, pack: renderPack, info: renderInfo})[v]();
