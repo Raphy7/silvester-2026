@@ -193,6 +193,8 @@ textarea.field{resize:vertical;min-height:70px;margin-top:6px}
 <canvas id="fw"></canvas>
 <div id="toast"></div>
 <input type="file" id="file" accept=".json,application/json" hidden>
+<script>window.FIREBASE_CONFIG = window.FIREBASE_CONFIG || null;</script>
+<script src="firebase-config.js"></script>
 
 <script>
 const T = ", Tallinn", H = ", Helsinki";
@@ -330,7 +332,8 @@ function normalize(s) {
   return s;
 }
 let S = normalize(JSON.parse(localStorage.getItem(KEY) || localStorage.getItem("plan") || "null") || {});
-const save = () => localStorage.setItem(KEY, JSON.stringify(S));
+const saveLocal = () => localStorage.setItem(KEY, JSON.stringify(S));
+const save = () => { saveLocal(); window.TripSync?.schedulePush?.(S); };
 let WX = JSON.parse(localStorage.getItem("wx") || "{}");
 let cur = 0, edit = false, openIdx = null, lastLoc = "", timeOffset = 0;
 
@@ -657,10 +660,87 @@ function bindSyncControls() {
   $("file").onchange = async e => { await doImportFile(e.target.files[0]); e.target.value = ""; };
 }
 
+function syncStatusLabel(st) {
+  if (!st) return "Lade Sync …";
+  if (!st.configured) return "Firebase noch nicht eingerichtet – siehe FIREBASE_SETUP.md im Repo";
+  const m = { off: "⚪ Aus", connecting: "🟡 Verbinde …", live: "🟢 Live", offline: "🟠 Offline", locked: "🔒 Passphrase eingeben", error: "🔴 Fehler" };
+  return (m[st.state] || "⚪") + (st.detail ? " · " + st.detail : "");
+}
+function bindCloudSync() {
+  const idIn = $("sync-trip-id");
+  const passIn = $("sync-pass");
+  const st = window.TripSync?.getStatus?.() || {};
+  if (idIn) {
+    idIn.oninput = () => { idIn.dataset.touched = "1"; };
+    if (!idIn.value) idIn.value = window.TripSync?.getTripId?.() || "";
+  }
+  $("bSyncCreate")?.onclick = () => {
+    const id = window.TripSync.createTripId();
+    if (idIn) { idIn.value = id; idIn.dataset.touched = "1"; }
+    toast("Neue Trip-ID – an Jasmin schicken");
+  };
+  $("bSyncCopy")?.onclick = async () => {
+    const id = idIn?.value?.trim() || window.TripSync.getTripId();
+    if (!id) { toast("Keine Trip-ID"); return; }
+    try { await navigator.clipboard.writeText(id); toast("Trip-ID kopiert"); }
+    catch { prompt("Trip-ID kopieren:", id); }
+  };
+  const activate = async () => {
+    if (!window.TripSync?.isFirebaseConfigured?.()) {
+      alert("Firebase fehlt: firebase-config.js anlegen (siehe firebase-config.example.js und FIREBASE_SETUP.md).");
+      return;
+    }
+    const id = idIn?.value?.trim();
+    const pass = passIn?.value || "";
+    if (!id) { toast("Trip-ID fehlt"); return; }
+    try {
+      await window.TripSync.enableSync(pass, id);
+      passIn.value = "";
+      toast("Cloud-Sync aktiv ✓");
+      bindCloudSync();
+    } catch (e) { alert(e.message || e); bindCloudSync(); }
+  };
+  $("bSyncOn")?.onclick = () => activate();
+  $("bSyncResume")?.onclick = () => activate();
+  $("bSyncPush")?.onclick = async () => {
+    try { await window.TripSync.pushNow(); toast("Hochgeladen"); } catch (e) { alert(e.message || e); }
+    bindCloudSync();
+  };
+  $("bSyncPull")?.onclick = async () => {
+    try {
+      if (await window.TripSync.pullNow()) toast("Vom Server geladen");
+      else toast("Noch kein Cloud-Stand");
+    } catch (e) { alert(e.message || e); }
+    bindCloudSync();
+  };
+  $("bSyncOff")?.onclick = () => {
+    if (!confirm("Cloud-Sync auf diesem Gerät deaktivieren? (Daten bleiben lokal und in der Cloud.)")) return;
+    window.TripSync.disableSync();
+    bindCloudSync();
+  };
+}
 function renderInfo() {
+  const st = window.TripSync?.getStatus?.() || { configured: false, state: "off" };
   $("v-info").innerHTML = `<div class="page">
-    <div class="card"><h3>💾 Daten synchronisieren</h3>
-      <p class="mut">Jedes Handy speichert lokal. Wer etwas ändert, exportiert und schickt <code>reiseplan.json</code> – der andere importiert. So bleiben Plan, Kasse &amp; Packliste gleich. Schnellzugriff: <b>💾 / 📂</b> oben.</p>
+    <div class="card" id="cloud-card"><h3>☁️ Cloud-Sync (Firebase)</h3>
+      <p class="mut" id="sync-status-line">${esc(syncStatusLabel(st))}</p>
+      <p class="mut">Gemeinsame Passphrase verschlüsselt Türcodes &amp; Buchungen. Trip-ID + Passphrase nur unter euch teilen.</p>
+      <label class="mut">Trip-ID</label>
+      <div class="addrow"><input id="sync-trip-id" class="field" type="text" autocomplete="off" placeholder="UUID vom ersten Gerät" value="${esc(window.TripSync?.getTripId?.() || "")}"><button type="button" class="pill" id="bSyncCopy" title="Kopieren">📋</button></div>
+      <div class="actions"><button type="button" class="pill" id="bSyncCreate">🆕 Raum erstellen</button></div>
+      <label class="mut">Sync-Passphrase</label>
+      <input id="sync-pass" class="field" type="password" autocomplete="current-password" placeholder="mind. 6 Zeichen – gleich auf beiden Handys">
+      <div class="actions">
+        <button type="button" class="pill primary" id="bSyncOn">Sync aktivieren</button>
+        <button type="button" class="pill" id="bSyncResume">Fortsetzen</button>
+      </div>
+      <div class="actions">
+        <button type="button" class="pill" id="bSyncPush">⬆️ Hochladen</button>
+        <button type="button" class="pill" id="bSyncPull">⬇️ Laden</button>
+        <button type="button" class="pill" id="bSyncOff">Sync aus</button>
+      </div></div>
+    <div class="card"><h3>💾 Backup (Datei)</h3>
+      <p class="mut">Fallback ohne Internet oder vor dem ersten Sync. Schnellzugriff: <b>💾 / 📂</b> oben.</p>
       <div class="actions"><button type="button" class="pill" id="bExp">💾 Export</button><button type="button" class="pill" id="bImp">📂 Import</button><button type="button" class="pill" id="bReset">↺ Reset</button></div></div>
     <div class="card"><h3>🎫 Buchungen & Adressen</h3>
       ${S.bookings.map((b, i) => `<div class="bk"><input class="field" data-k="${i}" value="${esc(b.k)}"><button class="x" data-del="${i}" aria-label="Löschen">✕</button><textarea class="field" data-v="${i}" rows="2">${esc(b.v)}</textarea></div>`).join("")}
@@ -683,8 +763,9 @@ function renderInfo() {
   $("bReset").onclick = () => {
     if (!confirm("Alles (Plan, Kasse, Packliste, Buchungen) auf den Ausgangszustand zurücksetzen?")) return;
     localStorage.removeItem(KEY); localStorage.removeItem("plan");
-    S = normalize({}); cur = 0; renderAll(); toast("Zurückgesetzt");
+    S = normalize({}); cur = 0; renderAll(); save(); toast("Zurückgesetzt");
   };
+  bindCloudSync();
 }
 
 /* ---------- Navigation ---------- */
@@ -784,6 +865,18 @@ async function loadWeather() {
 const hashIdx = S.days.findIndex(d => "#" + d.id === location.hash);
 const loc0 = locate();
 cur = hashIdx >= 0 ? hashIdx : loc0 ? loc0.di : 0;
+window.__tripApi = {
+  getState: () => S,
+  setState: data => { S = normalize(data); saveLocal(); renderAll(); },
+  getWho: () => {
+    const i = localStorage.getItem(ME_KEY);
+    return S.people[+i] || S.people[0] || "?";
+  },
+  onSyncStatus: () => {
+    const line = $("sync-status-line");
+    if (line && window.TripSync) line.textContent = syncStatusLabel(window.TripSync.getStatus());
+  }
+};
 bindSyncControls();
 applyTheme(document.documentElement.dataset.theme || "dark");
 $("bTheme").onclick = () => { applyTheme(document.documentElement.dataset.theme === "light" ? "dark" : "light"); buzz(); };
@@ -793,5 +886,6 @@ setInterval(tick, 1000);
 loadWeather();
 if ("serviceWorker" in navigator && location.protocol !== "file:") navigator.serviceWorker.register("sw.js");
 </script>
+<script type="module" src="trip-boot.js"></script>
 </body>
 </html>

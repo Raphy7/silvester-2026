@@ -39,7 +39,7 @@ Eine reine HTML/JS-App ohne Build-Schritt, optimiert für das Smartphone, instal
 - **Buchungen & Adressen:** editierbare Notizen für Flüge, Fähre und Airbnbs (Adresse, Türcode, Buchungsnummer …)
 - **Gut zu wissen:** Notruf, Zeitzone, Steckdosen, Taxi/ÖPNV, Trinkgeld, Sauna-Etikette
 - **Mini-Sprachführer** Deutsch · Estnisch · Finnisch
-- **Daten:** Export/Import als `reiseplan.json` und Zurücksetzen auf den Ausgangsplan
+- **☁️ Cloud-Sync** (Firebase, verschlüsselt) + Datei-Export/Import als Backup
 - **🕰️ Zeitreise:** beliebige Uhrzeit simulieren, um Live-Modus und Feuerwerk zu testen
 
 ### 🎇 Extras
@@ -57,6 +57,9 @@ Eine reine HTML/JS-App ohne Build-Schritt, optimiert für das Smartphone, instal
 1. Neues Repository anlegen und diese Dateien hochladen:
    ```
    index.html
+   trip-sync.js
+   trip-boot.js
+   firebase-config.js   ← aus firebase-config.example.js (siehe FIREBASE_SETUP.md)
    sw.js
    manifest.webmanifest
    icon.png
@@ -70,9 +73,9 @@ Eine reine HTML/JS-App ohne Build-Schritt, optimiert für das Smartphone, instal
 
 ## Daten & Speicherung
 
-- Jeder Browser/Handy hat **eigenen Speicher** – Raphael und Jasmin sehen dieselben Daten nur, wenn ihr sie teilt.
-- **Sync zwischen zwei Handys:** wer etwas ändert (Plan, Häkchen, Ausgabe …) → **Infos → 💾 Export** → per WhatsApp, AirDrop o. Ä. schicken → auf dem anderen Gerät **📂 Import** (überschreibt den lokalen Stand).
-- Tipp: ab und zu exportieren als Backup; nach dem Import einmal kurz prüfen, ob Kasse und Packliste stimmen.
+- **Cloud-Sync (empfohlen):** Firebase Firestore, verschlüsselt mit gemeinsamer Passphrase – Echtzeit zwischen Raphael & Jasmin. Einmalig einrichten: **[FIREBASE_SETUP.md](FIREBASE_SETUP.md)**.
+- In der App: **Infos → ☁️ Cloud-Sync** → Raum erstellen / Trip-ID teilen → gleiche Passphrase → **Sync aktivieren**.
+- **Backup:** **Infos → 💾 Export/Import** (`reiseplan.json`) als Fallback ohne Netz oder vor dem ersten Sync.
 
 ## Anpassen
 
@@ -89,6 +92,6 @@ Ort und Notiz sind optional. Nach Änderungen an `DEFAULTS` im Browser **↺ Res
 
 ## Technik
 
-- Eine einzige `index.html` mit Vanilla JS & CSS – keine Abhängigkeiten, kein Build
+- `index.html` + `trip-sync.js` (Firebase Firestore, AES-GCM + PBKDF2) – kein Build-Schritt
 - Google Maps Embed (ohne API-Key), Open-Meteo API für das Wetter
 - Service Worker mit Stale-while-revalidate-Caching

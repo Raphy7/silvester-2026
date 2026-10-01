@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Ein verschlüsseltes JSON-Blob pro Trip (Trip-ID = geheimes UUID, zusätzlich AES-GCM in der App).
+    match /trips/{tripId} {
+      allow read: if request.auth != null;
+      allow create, update: if request.auth != null
+        && request.resource.size() < 500000
+        && request.resource.data.keys().hasOnly(['cipher', 'iv', 'updatedAt', 'updatedBy', 'v'])
+        && request.resource.data.cipher is string
+        && request.resource.data.iv is string
+        && request.resource.data.updatedAt is number;
+      allow delete: if false;
+    }
+  }
+}

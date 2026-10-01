@@ -1,5 +1,5 @@
-const CACHE = "silvester-v2";
-const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon.png"];
+const CACHE = "silvester-v3";
+const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon.png", "./trip-sync.js", "./trip-boot.js"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)));
