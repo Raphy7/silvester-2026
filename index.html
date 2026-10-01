@@ -147,8 +147,8 @@ textarea.field{resize:vertical;min-height:70px;margin-top:6px}
 .bk .x{position:absolute;right:2px;top:2px}
 
 #bottom{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + var(--sb));display:flex;align-items:center;gap:2px;padding:6px;background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:24px;z-index:20;box-shadow:var(--shadow-nav)}
-#bottom button{border:0;background:none;border-radius:18px;padding:6px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.25rem;color:var(--mut);width:76px;min-height:52px;max-height:52px;flex:0 0 auto;transition:.2s}
-#bottom button span{font-size:.68rem;margin-top:1px}
+#bottom button{border:0;background:none;border-radius:18px;padding:4px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.15rem;color:var(--mut);width:calc((100vw - 48px) / 5);max-width:68px;min-height:52px;max-height:52px;flex:1 1 0;transition:.2s}
+#bottom button span{font-size:.62rem;margin-top:1px;line-height:1.1;text-align:center}
 #bottom button.active{background:var(--surface2);color:var(--txt)}
 #bottom button.active span{color:var(--acc)}
 
@@ -162,8 +162,6 @@ textarea.field{resize:vertical;min-height:70px;margin-top:6px}
   <div class="brand">
     <h1>🎆 Silvester 26/27<small>Raphael &amp; Jasmin · 🇪🇪 Tallinn · 🇫🇮 Helsinki</small></h1>
     <button type="button" class="icon-btn" id="bTheme" aria-label="Darstellung wechseln" title="Light Mode">☀️</button>
-    <button type="button" class="icon-btn" id="bExpHdr" aria-label="Daten exportieren" title="Export">💾</button>
-    <button type="button" class="icon-btn" id="bImpHdr" aria-label="Daten importieren" title="Import">📂</button>
     <button type="button" class="icon-btn" id="bFw" aria-label="Feuerwerk">🎇</button>
   </div>
   <div id="countdown"></div>
@@ -183,12 +181,14 @@ textarea.field{resize:vertical;min-height:70px;margin-top:6px}
 <section id="v-money" class="view"></section>
 <section id="v-pack" class="view"></section>
 <section id="v-info" class="view"></section>
+<section id="v-settings" class="view"></section>
 
 <nav id="bottom">
   <button type="button" data-tab="plan" class="active">📅<span>Plan</span></button>
   <button type="button" data-tab="money">💶<span>Kasse</span></button>
   <button type="button" data-tab="pack">🎒<span>Packen</span></button>
   <button type="button" data-tab="info">ℹ️<span>Infos</span></button>
+  <button type="button" data-tab="settings">⚙️<span>Einst.</span></button>
 </nav>
 <canvas id="fw"></canvas>
 <div id="toast"></div>
@@ -654,12 +654,6 @@ async function doImportFile(file) {
     S = n; save(); cur = 0; renderAll(); toast("Import erfolgreich ✓");
   } catch { alert("Ungültige Datei – bitte eine exportierte reiseplan.json wählen."); }
 }
-function bindSyncControls() {
-  $("bExpHdr").onclick = doExport;
-  $("bImpHdr").onclick = () => $("file").click();
-  $("file").onchange = async e => { await doImportFile(e.target.files[0]); e.target.value = ""; };
-}
-
 function syncStatusLabel(st) {
   if (!st) return "Lade Sync …";
   if (!st.configured) return "Firebase noch nicht eingerichtet – siehe FIREBASE_SETUP.md im Repo";
@@ -698,7 +692,7 @@ function bindCloudSync() {
       await window.TripSync.enableSync(pass, id);
       passIn.value = "";
       toast("Verbunden ✓");
-      renderInfo();
+      renderSettings();
     } catch (e) { alert(e.message || e); bindCloudSync(); }
   };
   on("bSyncConnect", () => connect());
@@ -706,31 +700,43 @@ function bindCloudSync() {
   on("bSyncOff", () => {
     if (!confirm("Cloud-Sync auf diesem Gerät deaktivieren? (Daten bleiben lokal und in der Cloud.)")) return;
     window.TripSync.disableSync();
-    renderInfo();
+    renderSettings();
   });
 }
-function renderInfo() {
+function renderSettings() {
   const st = window.TripSync?.getStatus?.() || { configured: false, state: "off" };
   const live = st.enabled && (st.state === "live" || st.state === "offline");
   const syncHelp = live
     ? "Änderungen werden automatisch synchronisiert. Nach Tab-Schließen Passphrase erneut eingeben und verbinden."
-    : "<b>Raphael:</b> Raum erstellen → Trip-ID teilen. <b>Beide:</b> Trip-ID + gleiche Passphrase → Verbinden. Neues Handy lädt den Cloud-Stand, ohne ihn zu überschreiben.";
-  $("v-info").innerHTML = `<div class="page">
+    : "<b>Raphael:</b> Raum erstellen → Trip-ID teilen. <b>Beide:</b> Trip-ID + gleiche Passphrase → Verbinden.";
+  $("v-settings").innerHTML = `<div class="page">
     <div class="card" id="cloud-card"><h3>☁️ Cloud-Sync</h3>
       <p class="mut" id="sync-status-line">${esc(syncStatusLabel(st))}</p>
       <p class="mut">${syncHelp}</p>
-      <label class="mut">Trip-ID</label>
+      <p class="mut">Trip-ID</p>
       <div class="addrow"><input id="sync-trip-id" class="field" type="text" autocomplete="off" placeholder="UUID vom ersten Gerät" value="${esc(window.TripSync?.getTripId?.() || "")}"><button type="button" class="pill" id="bSyncCopy" title="Kopieren">📋</button></div>
       ${live ? "" : `<div class="actions"><button type="button" class="pill" id="bSyncCreate">🆕 Raum erstellen (Raphael)</button></div>`}
-      <label class="mut">Passphrase</label>
+      <p class="mut">Passphrase</p>
       <input id="sync-pass" class="field" type="password" autocomplete="current-password" placeholder="gemeinsam gewählt, mind. 6 Zeichen">
       <div class="actions">
         <button type="button" class="pill primary" id="bSyncConnect">${live ? "Erneut verbinden" : "Verbinden"}</button>
         ${live ? `<button type="button" class="pill" id="bSyncOff">Trennen</button>` : ""}
       </div></div>
-    <div class="card"><h3>💾 Backup (Datei)</h3>
-      <p class="mut">Fallback ohne Internet oder vor dem ersten Sync. Schnellzugriff: <b>💾 / 📂</b> oben.</p>
-      <div class="actions"><button type="button" class="pill" id="bExp">💾 Export</button><button type="button" class="pill" id="bImp">📂 Import</button><button type="button" class="pill" id="bReset">↺ Reset</button></div></div>
+    <div class="card"><h3>💾 Backup</h3>
+      <p class="mut">Datei-Export als Fallback ohne Cloud oder Internet.</p>
+      <div class="actions"><button type="button" class="pill" id="bExp">💾 Export</button><button type="button" class="pill" id="bImp">📂 Import</button><button type="button" class="pill" id="bReset">↺ Plan zurücksetzen</button></div></div>
+  </div>`;
+  bindCloudSync();
+  $("bExp").onclick = doExport;
+  $("bImp").onclick = () => $("file").click();
+  $("bReset").onclick = () => {
+    if (!confirm("Alles (Plan, Kasse, Packliste, Buchungen) auf den Ausgangszustand zurücksetzen?")) return;
+    localStorage.removeItem(KEY); localStorage.removeItem("plan");
+    S = normalize({}); cur = 0; renderAll(); save(); toast("Zurückgesetzt");
+  };
+}
+function renderInfo() {
+  $("v-info").innerHTML = `<div class="page">
     <div class="card"><h3>🎫 Buchungen & Adressen</h3>
       ${S.bookings.map((b, i) => `<div class="bk"><input class="field" data-bk="${i}" value="${esc(b.k)}"><button type="button" class="x" data-del="${i}" aria-label="Löschen">✕</button><textarea class="field" data-bv="${i}" rows="2">${esc(b.v)}</textarea></div>`).join("")}
       <button class="pill" id="bkAdd" style="width:100%">＋ Eintrag</button></div>
@@ -747,14 +753,6 @@ function renderInfo() {
   });
   document.querySelectorAll("#v-info [data-del]").forEach(b => b.onclick = () => { if (confirm("Eintrag löschen?")) { S.bookings.splice(+b.dataset.del, 1); save(); renderInfo(); } });
   $("bkAdd").onclick = () => { S.bookings.push({k: "📌 Neu", v: ""}); save(); renderInfo(); };
-  $("bExp").onclick = doExport;
-  $("bImp").onclick = () => $("file").click();
-  $("bReset").onclick = () => {
-    if (!confirm("Alles (Plan, Kasse, Packliste, Buchungen) auf den Ausgangszustand zurücksetzen?")) return;
-    localStorage.removeItem(KEY); localStorage.removeItem("plan");
-    S = normalize({}); cur = 0; renderAll(); save(); toast("Zurückgesetzt");
-  };
-  bindCloudSync();
 }
 
 /* ---------- Navigation ---------- */
@@ -763,7 +761,7 @@ function switchView(v, force) {
   if (!force && active?.dataset.tab === v) return;
   document.querySelectorAll(".view").forEach(x => x.classList.toggle("active", x.id === "v-" + v));
   document.querySelectorAll("#bottom button").forEach(b => b.classList.toggle("active", b.dataset.tab === v));
-  ({plan: renderPlan, money: renderMoney, pack: renderPack, info: renderInfo})[v]();
+  ({plan: renderPlan, money: renderMoney, pack: renderPack, info: renderInfo, settings: renderSettings})[v]();
   scrollTo({top: 0});
 }
 document.querySelectorAll("#bottom button").forEach(b => b.onclick = () => { buzz(); switchView(b.dataset.tab); });
@@ -771,7 +769,7 @@ function renderAll() {
   const v = document.querySelector("#bottom .active").dataset.tab;
   renderPlan();
   if (v === "plan") return;
-  ({money: renderMoney, pack: renderPack, info: renderInfo})[v]();
+  ({money: renderMoney, pack: renderPack, info: renderInfo, settings: renderSettings})[v]();
 }
 mobile.onchange = () => renderPlan();
 
@@ -866,7 +864,7 @@ window.__tripApi = {
     if (line && window.TripSync) line.textContent = syncStatusLabel(window.TripSync.getStatus());
   }
 };
-bindSyncControls();
+$("file").onchange = async e => { await doImportFile(e.target.files[0]); e.target.value = ""; };
 applyTheme(document.documentElement.dataset.theme || "dark");
 $("bTheme").onclick = () => { applyTheme(document.documentElement.dataset.theme === "light" ? "dark" : "light"); buzz(); };
 showDay(cur);

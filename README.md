@@ -39,8 +39,9 @@ Eine reine HTML/JS-App ohne Build-Schritt, optimiert für das Smartphone, instal
 - **Buchungen & Adressen:** editierbare Notizen für Flüge, Fähre und Airbnbs (Adresse, Türcode, Buchungsnummer …)
 - **Gut zu wissen:** Notruf, Zeitzone, Steckdosen, Taxi/ÖPNV, Trinkgeld, Sauna-Etikette
 - **Mini-Sprachführer** Deutsch · Estnisch · Finnisch
-- **☁️ Cloud-Sync** (Firebase, verschlüsselt) + Datei-Export/Import als Backup
-- **🕰️ Zeitreise:** beliebige Uhrzeit simulieren, um Live-Modus und Feuerwerk zu testen
+
+### ⚙️ Einstellungen
+- **☁️ Cloud-Sync** (Firebase, verschlüsselt), **Backup**, Plan zurücksetzen
 
 ### 🎇 Extras
 - **Countdown** erst bis zur Landung in Tallinn, dann bis Mitternacht – die letzten 10 Sekunden pulsieren
@@ -74,8 +75,8 @@ Eine reine HTML/JS-App ohne Build-Schritt, optimiert für das Smartphone, instal
 ## Daten & Speicherung
 
 - **Cloud-Sync (empfohlen):** Firebase Firestore, verschlüsselt mit gemeinsamer Passphrase – Echtzeit zwischen Raphael & Jasmin. Einmalig einrichten: **[FIREBASE_SETUP.md](FIREBASE_SETUP.md)**.
-- In der App: **Infos → ☁️ Cloud-Sync** → Raum erstellen / Trip-ID teilen → gleiche Passphrase → **Verbinden**.
-- **Backup:** **Infos → 💾 Export/Import** (`reiseplan.json`) als Fallback ohne Netz oder vor dem ersten Sync.
+- In der App: **⚙️ Einst.** → **☁️ Cloud-Sync** → Raum erstellen / Trip-ID teilen → gleiche Passphrase → **Verbinden**.
+- **Backup:** **Einst.** → **💾 Export/Import** (`reiseplan.json`) als Fallback ohne Netz oder vor dem ersten Sync.
 
 ## Anpassen
 

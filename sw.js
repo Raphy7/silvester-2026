@@ -1,4 +1,4 @@
-const CACHE = "silvester-v5";
+const CACHE = "silvester-v6";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon.png", "./trip-sync.js", "./trip-boot.js"];
 
 self.addEventListener("install", e => {

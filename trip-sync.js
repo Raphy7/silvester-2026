@@ -255,7 +255,7 @@ export function init(cbs) {
   if (cfg.enabled && pass && tripId && isFirebaseConfigured()) {
     enableSync(pass, tripId).catch(e => setStatus("error", e.message));
   } else if (cfg.enabled && !pass) {
-    setStatus("locked", "Passphrase eingeben und in Infos verbinden");
+    setStatus("locked", "Passphrase unter Einst. eingeben");
   } else if (!isFirebaseConfigured()) {
     setStatus("off", "Firebase-Konfiguration fehlt");
   } else {
